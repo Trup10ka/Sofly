@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 
 def beliani_gather_links() -> int:
 
-    path_to_html = r"D:\Programing\Html\sofly\crawler\input\pohovky_beliani.htm"
+    path_to_html = r"input\pohovky_beliani.htm"
     # Load the HTML file
     with open(path_to_html, "r", encoding="utf-8") as file:
         soup = BeautifulSoup(file, "html.parser")

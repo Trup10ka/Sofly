@@ -3,7 +3,7 @@ import os
 
 def veneti_gather_links() -> int:
     # Define file paths
-    input_file = r"D:\Programing\Html\sofly\crawler\input\pohovky_veneti.html"
+    input_file = r"input\pohovky_veneti.html"
     output_file = "links-gathered-veneti.txt"
 
     # Read the HTML file

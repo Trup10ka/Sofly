@@ -2,13 +2,13 @@ import requests
 from bs4 import BeautifulSoup
 
 BASE_URL = "https://www.asko-nabytek.cz"
-OUTPUT_FILE = "links-gathered.txt"
+OUTPUT_FILE = "links-gathered-asko.txt"
 START_PAGE = 13
 END_PAGE = 1
 
 all_links = []
 
-def fetch_links():
+def fetch_links() -> int:
     for page in range(START_PAGE, END_PAGE, -1):
         url = f"{BASE_URL}/pohovky?page={page}"
         print(f"Fetching page {page} - {url}...")
@@ -34,5 +34,7 @@ def fetch_links():
 
     print(f"Scraping completed. {len(all_links)} links saved to {OUTPUT_FILE}.")
 
-def gather_links():
-    fetch_links()
+    return len(all_links)
+
+def asko_gather_links() -> int:
+    return fetch_links()
