@@ -3,3 +3,5 @@
 crawler/.venv
 crawler/links-gathered.txt
 crawler/links-parsed.csv
+
+__pycache__/
