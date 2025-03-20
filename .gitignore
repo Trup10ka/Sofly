@@ -3,5 +3,8 @@
 crawler/.venv
 crawler/links-gathered.txt
 crawler/links-parsed.csv
+crawler/links-gathered-asko.txt
+crawler/links-gathered-beliani.txt
+crawler/links-gathered-veneti.txt
 
 __pycache__/
