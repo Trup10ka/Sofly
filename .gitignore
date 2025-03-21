@@ -6,5 +6,6 @@ crawler/links-parsed.csv
 crawler/links-gathered-asko.txt
 crawler/links-gathered-beliani.txt
 crawler/links-gathered-veneti.txt
+crawler/sofa-set.csv
 
 __pycache__/
