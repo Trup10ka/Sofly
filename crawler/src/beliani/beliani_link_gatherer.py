@@ -7,15 +7,13 @@ def beliani_gather_links() -> int:
     with open(path_to_html, "r", encoding="utf-8") as file:
         soup = BeautifulSoup(file, "html.parser")
 
-    # Base URL
-    base_url = "https://www.beliani.cz"
 
     # Extract links
     links = []
     for product in soup.find_all("div", class_="product-teaser"):
         a_tag = product.find("a", class_="itemBox")
         if a_tag and a_tag.get("href"):
-            links.append(base_url + a_tag["href"])
+            links.append(a_tag["href"])
 
     # Save to file
     with open("links-gathered-beliani.txt", "w", encoding="utf-8") as file:
