@@ -1,8 +1,8 @@
 import requests
-import csv
+import time
 from bs4 import BeautifulSoup
 
-from src.util import init_data_map, ASKO_DESCRIPTION_KEYS
+from src.util import init_data_map, ASKO_DESCRIPTION_KEYS, finalize_parsed_dict, append_parsed_data
 
 
 def asko_check_whether_contains_metal(li_value: str) -> bool:
@@ -37,8 +37,9 @@ def check_all_th_elements_in_parameters(th_elements, data_dict):
         td_pair_element = th.find_next('td')
         td_value = td_pair_element.text.strip()
 
-        if th.text.lower().strip() == "rozměry":
-            dimensions = td_value.split('x')
+        if th.text.lower().strip().split(' ')[0] == "rozměry":
+            td_value_parsed = td_value.replace('cm', '').strip()
+            dimensions = td_value_parsed.split(',')[0].split('x')
             data_dict["length"] = int(dimensions[0].split('-')[0])
             data_dict["width"] = int(dimensions[1].split('-')[0])
             data_dict["depth"] = int(dimensions[2].split('-')[0])
@@ -48,11 +49,15 @@ def check_all_th_elements_in_parameters(th_elements, data_dict):
 
 
 def check_all_li_elements_in_description(li_elements, data_dict):
+    default_contains_metal = -1
+    default_contains_hardwood = -1
+    default_cover_material = "BLANK"
     for li in li_elements:
         if ":" not in li.text.lower().strip():
             continue
         li_key, li_value = li.text.split(':', maxsplit=1)
-        if li_key.lower().strip() not in ASKO_DESCRIPTION_KEYS:
+        li_key = li_key.split(' ', 1)[0].lower().strip()
+        if li_key.split(' ', 1)[0].lower().strip() not in ASKO_DESCRIPTION_KEYS:
             continue
 
         if li_key == "konstrukce":
@@ -61,6 +66,11 @@ def check_all_li_elements_in_description(li_elements, data_dict):
 
         elif li_key == "potah":
             data_dict["cover_material"] = get_material(li_value)
+
+        # TODO: make cleaner
+        if data_dict["contains_metal"] != default_contains_metal and data_dict[
+            "contains_hardwood"] != default_contains_hardwood and data_dict["cover_material"] != default_cover_material:
+            break
 
 
 def parse_description_div(soup: BeautifulSoup, data_dict) -> bool:
@@ -85,10 +95,9 @@ def parse_product_parameters(soup: BeautifulSoup, data_dict) -> bool:
 
 def parse_link(page_link: str) -> dict:
     try:
-        import time
 
         response = requests.get(page_link)
-        time.sleep(7)
+        time.sleep(3)
         response.raise_for_status()
 
         soup = BeautifulSoup(response.text, "html.parser")
@@ -126,16 +135,10 @@ def parse_asko_links() -> int:
             if len(parsed_data) == 0:
                 continue
 
-            default_data = init_data_map()
-            if any(parsed_data[key] == default_data[key] for key in parsed_data):
-                raise Exception("Parsing data failed - default value was in the result dict, which means error during parsing")
-            all_sofas_parsed_links.append(parsed_data)
+            if not finalize_parsed_dict(all_sofas_parsed_links, parsed_data):
+                print(f"Failed to parse link: {link}")
+            else:
+                total_parsed_links += 1
 
-    with open("sofa-set.csv", "a", newline='', encoding="utf-8") as csvfile:
-        fieldnames = all_sofas_parsed_links[0].keys() if all_sofas_parsed_links else []
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader()
-        for data in all_sofas_parsed_links:
-            writer.writerow(data)
-
-    return total_parsed_links
+        append_parsed_data(all_sofas_parsed_links)
+        return total_parsed_links
