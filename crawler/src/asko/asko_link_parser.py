@@ -2,7 +2,7 @@ import requests
 import time
 from bs4 import BeautifulSoup
 
-from src.util import init_data_map, ASKO_DESCRIPTION_KEYS, finalize_parsed_dict, append_parsed_data
+from src.util import init_data_map, ASKO_DESCRIPTION_KEYS, finalize_parsed_dict, append_parsed_data, get_soup_parser
 
 
 def asko_check_whether_contains_metal(li_value: str) -> bool:
@@ -95,12 +95,7 @@ def parse_product_parameters(soup: BeautifulSoup, data_dict) -> bool:
 
 def parse_link(page_link: str) -> dict:
     try:
-
-        response = requests.get(page_link)
-        time.sleep(3)
-        response.raise_for_status()
-
-        soup = BeautifulSoup(response.text, "html.parser")
+        soup = get_soup_parser(page_link)
 
         main_price = soup.find('strong', class_='main-price')
         price_text = main_price.text if main_price else None
