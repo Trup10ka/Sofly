@@ -6,10 +6,13 @@ from bs4 import BeautifulSoup
 
 ASKO_DESCRIPTION_KEYS = ("konstrukce", "potah", "rozměry (š x v x h)", "výška sedáku")
 VENETI_DESCRIPTION_KEYS = ("konstrukce", "potah", "rozměry", "výška sedáku")
-BELIANI_DESCRIPTION_KEYS = ("konstrukce", "potah", "rozměry", "výška sedáku")
+BELIANI_DESCRIPTION_KEYS = ("další materiál", "materiál", "výška", "šířka", "hloubka", "výška sedáku")
 
 def get_soup_parser(link: str) -> BeautifulSoup:
-    response = requests.get(link)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    }
+    response = requests.get(link, headers=headers)
     time.sleep(3)
     response.raise_for_status()
     return BeautifulSoup(response.text, "html.parser")
