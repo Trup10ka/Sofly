@@ -18,7 +18,8 @@ def append_parsed_data(all_sofas_parsed_links: list) -> None:
     with open("sofa-set.csv", "a", newline='', encoding="utf-8") as csvfile:
         fieldnames = all_sofas_parsed_links[0].keys() if all_sofas_parsed_links else []
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader()
+        if csvfile.tell() == 0:
+            writer.writeheader()
         for data in all_sofas_parsed_links:
             writer.writerow(data)
 
