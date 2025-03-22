@@ -68,7 +68,18 @@ def finalize_parsed_dict(all_sofas_parsed_links: list, data_dict: dict) -> bool:
         data_dict["ERROR"] = 1
     data_dict["ERROR"] = 0
     all_sofas_parsed_links.append(data_dict)
+    print("Parsed data: ", data_dict)
     return True
+
+def map_key(key: str) -> str:
+    if key == "šířka":
+        return "length"
+    elif key == "výška":
+        return "width"
+    elif key == "hloubka":
+        return "depth"
+    else:
+        return key
 
 def init_data_map() -> dict:
     return {
