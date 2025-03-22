@@ -3,10 +3,43 @@ import time
 
 import requests
 from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 ASKO_DESCRIPTION_KEYS = ("konstrukce", "potah", "rozměry (š x v x h)", "výška sedáku")
 VENETI_DESCRIPTION_KEYS = ("konstrukce", "potah", "rozměry", "výška sedáku")
 BELIANI_DESCRIPTION_KEYS = ("další materiál", "materiál", "výška", "šířka", "hloubka", "výška sedáku")
+
+BELIANI_COOKIE = {
+        "name": "cookie_warning_done",
+        "value": "1",
+        "domain": "www.beliani.cz",
+        "path": "/",
+        "secure": False,
+        "httpOnly": False,
+        "sameSite": "None",
+        "expiry": 1778169315  # Convert "Tue, 10 Mar 2026 13:15:15 GMT" to UNIX timestamp
+}
+
+def get_selenium_parser(link: str):
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+
+
+    driver = webdriver.Chrome(options=options)
+
+    driver.get("https://www.beliani.cz")
+
+    driver.add_cookie(BELIANI_COOKIE)
+
+    driver.get(link)
+
+    time.sleep(3)
+
+    return driver
 
 def get_soup_parser(link: str) -> BeautifulSoup:
     headers = {
