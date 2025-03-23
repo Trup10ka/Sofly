@@ -72,14 +72,19 @@ def finalize_parsed_dict(all_sofas_parsed_links: list, data_dict: dict) -> bool:
     return True
 
 def map_key(key: str) -> str:
-    if key == "šířka":
-        return "length"
-    elif key == "výška":
-        return "width"
-    elif key == "hloubka":
-        return "depth"
-    else:
-        return key
+    match key:
+        case "šířka":
+            return "length"
+        case "výška":
+            return "width"
+        case "hloubka":
+            return "depth"
+        case "výška sedu":
+            return "sit_height"
+        case "materiál" | "materiál potahu":
+            return "cover_material"
+        case _:
+            return key
 
 def init_data_map() -> dict:
     return {
