@@ -66,7 +66,8 @@ def finalize_parsed_dict(all_sofas_parsed_links: list, data_dict: dict) -> bool:
     default_data = init_data_map()
     if any(data_dict[key] == default_data[key] for key in data_dict):
         data_dict["ERROR"] = 1
-    data_dict["ERROR"] = 0
+    else:
+        data_dict["ERROR"] = 0
     all_sofas_parsed_links.append(data_dict)
     print("Parsed data: ", data_dict)
     return True
