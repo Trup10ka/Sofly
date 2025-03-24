@@ -4,6 +4,25 @@ from requests import RequestException
 
 from src.util import get_soup_parser, init_data_map, finalize_parsed_dict, VENETI_DESCRIPTION_KEYS, map_key
 
+def set_hardwood_and_steel_to_zero_if_not_detected(data_dict: dict):
+    if data_dict["contains_metal"] == -1:
+        data_dict["contains_metal"] = 0
+
+    if data_dict["contains_hardwood"] == -1:
+        data_dict["contains_hardwood"] = 0
+
+def check_if_contains_hardwood_or_metal(data_dict, soup):
+    description_div = soup.find('div', class_='product-description')
+    list_of_descriptions = description_div.find_all('ul')[1].find_all('li')
+
+    for description in list_of_descriptions:
+        if any(word in description.text.lower() for word in ["kovové", "ocel", "ocelové", "železo", "železné"]):
+            data_dict["contains_metal"] = 1
+
+        elif any(word in description.text.lower() for word in ["dřevo", "dřevěné", "masiv"]):
+            data_dict["contains_hardwood"] = 1
+
+    set_hardwood_and_steel_to_zero_if_not_detected(data_dict)
 
 def process_value(data_dict, value, key):
     mapped_key = map_key(key.lower().strip())
@@ -40,6 +59,8 @@ def parse_veneti_link(page_link: str) -> dict:
             if key.text.lower().strip() not in VENETI_DESCRIPTION_KEYS:
                 continue
             process_value(data_dict, values[index], key.text)
+
+        check_if_contains_hardwood_or_metal(data_dict, soup)
 
         return data_dict
 
