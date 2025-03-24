@@ -2,7 +2,9 @@ import re
 
 from requests import RequestException
 
-from src.util import get_soup_parser, init_data_map, finalize_parsed_dict, VENETI_DESCRIPTION_KEYS, map_key
+from src.util import get_soup_parser, init_data_map, finalize_parsed_dict, VENETI_DESCRIPTION_KEYS, map_key, \
+    append_parsed_data
+
 
 def set_hardwood_and_steel_to_zero_if_not_detected(data_dict: dict):
     if data_dict["contains_metal"] == -1:
@@ -47,7 +49,9 @@ def parse_veneti_link(page_link: str) -> dict:
         main_price = soup.find('span', class_='current-price-value')
         price_text = main_price.text if main_price else None
         if price_text is None:
-            raise Exception("Price not found")
+            error_dict = init_data_map()
+            error_dict["ERROR"] = 1
+            return error_dict
 
         data_dict = init_data_map()
         data_dict["price"] = parse_veneti_price(price_text)
@@ -84,4 +88,5 @@ def parse_veneti_links() -> int:
                 print(f"Failed to parse link: {link}")
             else:
                 total_parsed_links += 1
+    append_parsed_data(all_sofas_parsed_links)
     return total_parsed_links
