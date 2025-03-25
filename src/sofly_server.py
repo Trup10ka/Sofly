@@ -96,11 +96,13 @@ class SoflyServerBuilder:
 
     def build(self) -> SoflyServer | None:
         if self._host is None:
-            logger.critical(f"You must provide the server with a host - host not provided")
+            logger.critical("You must provide a host - host not provided")
             return None
 
         return SoflyServer(
-            static_folder=self._static_folder,
+            host=self._host,
+            port=self._port,
+            static_folder_path=self._static_folder,
             template_folder=self._template_folder,
             is_debug=self._is_debug,
             should_create_public_dir=self._should_create_public_dir
