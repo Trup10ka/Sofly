@@ -16,6 +16,7 @@ selenium = "^4.30.0"
 pandas = "^2.2.3"
 scikit-learn = "^1.6.1"
 xgboost = "^3.0.0"
+loguru = "^0.7.3"
 
 
 [build-system]
