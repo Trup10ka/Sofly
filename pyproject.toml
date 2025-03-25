@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "sofly"
+version = "0.1.0"
+description = "Web abb for advertising custom Sofas - whitch predition of their price -> LLM"
+authors = ["Lukáš Friedl <lukys3036@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+flask = "^3.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
