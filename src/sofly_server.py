@@ -1,7 +1,7 @@
 import os
-
-from flask import Flask
+from flask import Flask, send_from_directory
 from loguru import logger
+from src.endpoints import init_endpoints
 
 
 class SoflyServer:
@@ -24,6 +24,7 @@ class SoflyServer:
     - should_create_public_dir: bool | Default value is True
         Whether the server should create a public directory for static files
     """
+
     def __new__(cls, *args, **kwargs):
         if any(arg is None for arg in args) or any(value is None for value in kwargs.values()):
             logger.critical("THE SERVER CANNOT BE INSTANTIATED WITHOUT THE REQUIRED ARGUMENTS")
@@ -31,47 +32,55 @@ class SoflyServer:
         return super(SoflyServer, cls).__new__(cls)
 
     def __init__(self,
-                 host: str = '0.0.0.0',
+                 host: str,
                  port: int = 5000,
-                 static_folder: str = 'public',
-                 template_folder: str = 'templates',
+                 static_folder_path: str = os.path.join(os.getcwd(), 'public'),
+                 template_folder: str = os.path.join(os.getcwd(),'templates'),
                  is_debug: bool = True,
                  should_create_public_dir: bool = True) -> None:
-        logger.info(f"Creating SoflyServer instance at {static_folder}/{template_folder}")
-        self.app = Flask(__name__, static_folder=static_folder, template_folder=template_folder)
-        logger.success("Created SoflyServer instance")
+        logger.info(f"Creating SoflyServer instance with static: {static_folder_path}, templates: {template_folder}")
+        self.app = Flask(__name__, static_folder=static_folder_path, template_folder=template_folder)
 
+        self.host = host
+        self.port = port
         self.is_debug = is_debug
         self.should_create_public_dir = should_create_public_dir
 
+        logger.success("Created SoflyServer instance")
+
     def init(self):
         logger.info("Initializing SoflyServer")
+        self.init_static_folder()
+        init_endpoints(self.app)
+
+    def init_static_folder(self):
+        logger.info("Initializing static folder")
+
         if self.should_create_public_dir:
-            logger.info("Creating a public directory for static files")
-            os.makedirs('public', exist_ok=True)
-        else:
-            logger.warning("Creating of public directory is not allowed, ensure it exists!")
+            os.makedirs(self.app.static_folder, exist_ok=True)
+            logger.info(f"Ensured static folder exists: {self.app.static_folder}")
+
 
     @classmethod
     def builder(cls):
         return SoflyServerBuilder()
 
     def run(self) -> None:
-        logger.info("Running SoflyServer")
-        self.app.run(host='0.0.0.0', port=5000, debug=self.is_debug)
+        logger.info(f"Running SoflyServer on {self.host}:{self.port}")
+        self.app.run(host=self.host, port=self.port, debug=self.is_debug)
 
 
 class SoflyServerBuilder:
     def __init__(self):
-        self._static_folder = 'public'
+        self._static_folder = os.path.join(os.getcwd(), 'public')
         self._template_folder = 'templates'
         self._is_debug = True
         self._should_create_public_dir = True
         self._host = None
-        self._port = 6623
+        self._port = 6623  # Default port
 
     def set_static_folder(self, static_folder: str):
-        self._static_folder = static_folder
+        self._static_folder = os.path.join(os.getcwd(), static_folder)
         return self
 
     def set_template_folder(self, template_folder: str):
@@ -95,6 +104,7 @@ class SoflyServerBuilder:
         return self
 
     def build(self) -> SoflyServer | None:
+
         if self._host is None:
             logger.critical("You must provide a host - host not provided")
             return None
