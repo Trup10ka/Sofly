@@ -1,4 +1,5 @@
 .idea
+.venv
 
 crawler/.venv
 crawler/links-gathered.txt
