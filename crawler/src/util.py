@@ -7,7 +7,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 ASKO_DESCRIPTION_KEYS = ("konstrukce", "potah", "rozměry (š x v x h)", "výška sedáku")
-VENETI_DESCRIPTION_KEYS = ("rám", "materiál potahu", "výška", "šířka", "hloubka", "výška sedu")
 BELIANI_DESCRIPTION_KEYS = ("další materiál", "materiál", "výška", "šířka", "hloubka", "výška sedáku")
 
 BELIANI_COOKIE = {
@@ -51,7 +50,7 @@ def get_soup_parser(link: str) -> BeautifulSoup:
     return BeautifulSoup(response.text, "html.parser")
 
 def append_parsed_data(all_sofas_parsed_links: list) -> None:
-    with open("sofa-set.csv", "a", newline='', encoding="utf-8") as csvfile:
+    with open("furniture-dataset.csv", "a", newline='', encoding="utf-8") as csvfile:
         fieldnames = all_sofas_parsed_links[0].keys() if all_sofas_parsed_links else []
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         if csvfile.tell() == 0:
