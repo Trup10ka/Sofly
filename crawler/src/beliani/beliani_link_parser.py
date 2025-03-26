@@ -7,24 +7,21 @@ from src.util import init_data_map, finalize_parsed_dict, append_parsed_data, ge
     get_selenium_parser, map_key
 
 
-def map_material(material: str) -> str:
+def map_material(data_dict: dict, material: str):
     if material in ["kůže", "umělá kůže", "veganská eko kůže", "štípenka"]:
-        return "leather"
+        data_dict["material_leather"] = 1
     elif material in ["buklé", "len", "manšestr", "nepravý semiš", "polyester", "umělý len", "umělý samet", "žinylka"]:
-        return "fabric"
+        data_dict["material_fabric"] = 1
     else:
-        return "UNDEFINED"
+        data_dict["material_none"] = 1
 
-
-def map_additional_material(material: str) -> dict:
-    materials = {"contains_metal": 0, "contains_hardwood": 0}
-    if any(substring in material for substring in ["kov", "kovová", "kovové", "železo", "ocel", "titan", "hliník", "nerez"]):
-        materials["contains_metal"] = 1
-    elif any(substring in material for substring in ["dřevo", "masiv", "dřevo masiv"]):
-        materials["contains_hardwood"] = 1
-
-    return materials
-
+def define_type_of_furniture(data_dict: dict, furniture_type: str) -> None:
+    if any(sofa in furniture_type for sofa in ["pohovka", "gauč", "lenoška"]):
+        data_dict["is_sofa"] = 1
+    elif any(chair in furniture_type for chair in ["židle", "židlí", "židličky", "židlička"]):
+        data_dict["is_chair"] = 1
+    elif "stůl" in furniture_type:
+        data_dict["is_table"] = 1
 
 def parse_beliani_price(price_text: str) -> float:
     return float(price_text.replace(" ", ""))
@@ -32,18 +29,13 @@ def parse_beliani_price(price_text: str) -> float:
 
 def process_key_value(key: str, value: str, data_dict: dict):
     if key == "materiál":
-        data_dict["cover_material"] = map_material(value)
-
-    elif key == "další materiál":
-        additional_material = map_additional_material(value)
-        data_dict.update(additional_material)
+        map_material(data_dict, value)
 
     elif key in ["šířka", "výška", "hloubka"]:
-        mapped_key = map_key(key)
-        data_dict[mapped_key] = int(value.replace("cm", "").strip())
+        data_dict["dimensions"] = data_dict["dimensions"] + int(value.replace("cm", "").strip())
 
-    elif key == "výška sedáku":
-        data_dict["sit_height"] = int(value.replace("cm", "").strip())
+    elif key == "typ":
+        define_type_of_furniture(data_dict, value)
 
 
 def parse_all_other_beliani_parameters(selenium_driver: WebDriver, data_dict: dict):
