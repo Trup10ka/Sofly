@@ -63,8 +63,7 @@ def finalize_parsed_dict(all_sofas_parsed_links: list, data_dict: dict) -> bool:
     if len(data_dict) == 0:
         return False
 
-    default_data = init_data_map()
-    if any(data_dict[key] == default_data[key] for key in data_dict):
+    if data_dict["dimensions"] == 0 or all_materials_are_zero(data_dict) or all_furniture_types_are_zero(data_dict):
         data_dict["ERROR"] = 1
     else:
         data_dict["ERROR"] = 0
@@ -87,14 +86,20 @@ def map_key(key: str) -> str:
         case _:
             return key
 
+def all_materials_are_zero(data_dict: dict) -> bool:
+    return data_dict["material_leather"] == 0 and data_dict["material_fabric"] == 0 and data_dict["material_none"] == 0
+
+def all_furniture_types_are_zero(data_dict: dict) -> bool:
+    return data_dict["is_sofa"] == 0 and data_dict["is_table"] == 0 and data_dict["is_chair"] == 0
+
 def init_data_map() -> dict:
     return {
-        "length": 0,
-        "width": 0,
-        "depth": 0,
-        "cover_material": "BLANK",
-        "sit_height": 0,
-        "contains_metal": -1,
-        "contains_hardwood": -1,
+        "dimensions": 0,
+        "material_leather": 0,
+        "material_fabric": 0,
+        "material_none": 0,
+        "is_sofa": 0,
+        "is_table": 0,
+        "is_chair": 0,
         "price": 0
     }
