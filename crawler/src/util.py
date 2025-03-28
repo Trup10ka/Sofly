@@ -3,6 +3,7 @@ import time
 
 import requests
 from bs4 import BeautifulSoup
+from loguru import logger
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
@@ -67,7 +68,7 @@ def finalize_parsed_dict(all_sofas_parsed_links: list, data_dict: dict) -> bool:
     else:
         data_dict["ERROR"] = 0
     all_sofas_parsed_links.append(data_dict)
-    print("Parsed data: ", data_dict)
+    logger.success(f"Parsed data: {data_dict}")
     return True
 
 def map_key(key: str) -> str:

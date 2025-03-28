@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+from loguru import logger
 import os
 
 def veneti_gather_links() -> int:
@@ -24,6 +25,6 @@ def veneti_gather_links() -> int:
     with open(output_file, "w", encoding="utf-8") as file:
         file.write("\n".join(links))
 
-    print(f"Extracted {len(links)} links and saved to {output_file}")
+    logger.success(f"Extracted {len(links)} links and saved to {output_file}")
 
     return len(links)
