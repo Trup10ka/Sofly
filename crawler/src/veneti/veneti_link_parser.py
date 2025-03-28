@@ -77,7 +77,7 @@ def parse_veneti_links() -> int:
         links = f.readlines()
 
         for link in links:
-            logger.info(f"Parsing link: {link}")
+            logger.info(f"Parsing link: {link.strip()}")
             parsed_data = parse_veneti_link(link.strip())
             if len(parsed_data) == 0:
                 continue

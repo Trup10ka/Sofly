@@ -93,7 +93,7 @@ def parse_beliani_links() -> int:
         links = f.readlines()
 
         for link in links:
-            print(f"Parsing link: {link}")
+            print(f"Parsing link: {link.strip()}")
             parsed_data = parse_beliani_link(link.strip(), selenium_driver)
 
             if parsed_data.get("ERROR"):
