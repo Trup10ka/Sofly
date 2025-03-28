@@ -3,7 +3,7 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 
-from src.util import init_data_map, finalize_parsed_dict, append_parsed_data, get_soup_parser, BELIANI_DESCRIPTION_KEYS, \
+from crawler.src.util import init_data_map, finalize_parsed_dict, append_parsed_data, get_soup_parser, BELIANI_DESCRIPTION_KEYS, \
     get_selenium_parser, map_key
 
 
@@ -89,7 +89,7 @@ def parse_beliani_links() -> int:
     total_parsed_links = 0
     all_sofas_parsed_links = []
     selenium_driver = get_selenium_parser("https://www.beliani.cz")
-    with open("links-gathered-beliani.txt", "r", encoding="utf-8") as f:
+    with open("crawler/links-gathered-beliani.txt", "r", encoding="utf-8") as f:
         links = f.readlines()
 
         for link in links:
