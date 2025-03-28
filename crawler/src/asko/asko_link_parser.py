@@ -1,8 +1,8 @@
 import requests
-import time
 from bs4 import BeautifulSoup
+from loguru import logger
 
-from src.util import init_data_map, ASKO_DESCRIPTION_KEYS, finalize_parsed_dict, append_parsed_data, get_soup_parser
+from crawler.src.util import init_data_map, ASKO_DESCRIPTION_KEYS, finalize_parsed_dict, append_parsed_data, get_soup_parser
 
 
 def asko_check_whether_contains_metal(li_value: str) -> bool:
@@ -12,21 +12,36 @@ def asko_check_whether_contains_metal(li_value: str) -> bool:
 def asko_check_whether_contains_hardwood(li_value: str) -> bool:
     return any(substring in li_value for substring in ["dřevo", "masiv", "dřevo masiv"])
 
+def get_asko_price(data_dict, soup: BeautifulSoup) -> str | None:
+    try:
+        main_price = soup.find('strong', class_='main-price')
+        main_price_with_discount = soup.find('span', class_='price-value__action-text')
+        main_price_with_discount = main_price_with_discount.find('strong') if main_price_with_discount else None
+
+        if main_price_with_discount is None and main_price is None:
+            raise AttributeError("Price not found")
+        else:
+             return main_price_with_discount.text if main_price_with_discount else main_price.text
+    except AttributeError:
+        price_text = "-1"
+        data_dict["ERROR"] = 1
+        data_dict["price"] = price_text
+        return None
 
 def parse_asko_price(price_text: str) -> float:
     return float(' '.join(price_text.replace('\xa0', ' ').strip().split(' ')[:-1]).strip().replace(' ', ''))
 
 
-def get_material(li_value: str) -> str:
+def set_material(data_dict: dict, li_value: str) -> None:
     first_element = li_value.split('-', 1)[0].strip()
     if "látka" in first_element:
-        return "fabric"
+        data_dict["material_fabric"] = 1
     elif "kůže" in first_element:
-        return "leather"
+        data_dict["material_leather"] = 1
     elif "ekokůže" in first_element or "eko kůže" in first_element:
-        return "eco-leather"
+        data_dict["material_leather"] = 1
     else:
-        return "UNDEFINED"
+        data_dict["material_none"] = 1
 
 
 def check_all_th_elements_in_parameters(th_elements, data_dict):
@@ -40,18 +55,10 @@ def check_all_th_elements_in_parameters(th_elements, data_dict):
         if th.text.lower().strip().split(' ')[0] == "rozměry":
             td_value_parsed = td_value.replace('cm', '').strip()
             dimensions = td_value_parsed.split(',')[0].split('x')
-            data_dict["length"] = int(dimensions[0].split('-')[0])
-            data_dict["width"] = int(dimensions[1].split('-')[0])
-            data_dict["depth"] = int(dimensions[2].split('-')[0])
-
-        elif th.text.lower().strip() == "výška sedáku":
-            data_dict["sit_height"] = int(td_value.strip().split("\n")[0].split('-')[0].strip())
+            data_dict["dimensions"] = int(dimensions[0].split('-')[0]) + int(dimensions[1].split('-')[0]) + int(dimensions[2].split('-')[0])
 
 
 def check_all_li_elements_in_description(li_elements, data_dict):
-    default_contains_metal = -1
-    default_contains_hardwood = -1
-    default_cover_material = "BLANK"
     for li in li_elements:
         if ":" not in li.text.lower().strip():
             continue
@@ -60,17 +67,10 @@ def check_all_li_elements_in_description(li_elements, data_dict):
         if li_key.split(' ', 1)[0].lower().strip() not in ASKO_DESCRIPTION_KEYS:
             continue
 
-        if li_key == "konstrukce":
-            data_dict["contains_metal"] = 1 if asko_check_whether_contains_metal(li_value) else 0
-            data_dict["contains_hardwood"] = 1 if asko_check_whether_contains_hardwood(li_value) else 0
+        # TODO: implement detecting what type of furniture it is
 
         elif li_key == "potah":
-            data_dict["cover_material"] = get_material(li_value)
-
-        # TODO: make cleaner
-        if data_dict["contains_metal"] != default_contains_metal and data_dict[
-            "contains_hardwood"] != default_contains_hardwood and data_dict["cover_material"] != default_cover_material:
-            break
+            set_material(data_dict, li_value)
 
 
 def parse_description_div(soup: BeautifulSoup, data_dict) -> bool:
@@ -97,13 +97,12 @@ def parse_link(page_link: str) -> dict:
     try:
         soup = get_soup_parser(page_link)
 
-        main_price = soup.find('strong', class_='main-price')
-        price_text = main_price.text if main_price else None
+        data_dict = init_data_map()
+        price_text = get_asko_price(data_dict, soup)
 
         if price_text is None:
             raise Exception("Price not found")
 
-        data_dict = init_data_map()
         data_dict["price"] = parse_asko_price(price_text)
         if not parse_description_div(soup, data_dict):
             raise Exception("Parsing description failed")
@@ -114,24 +113,24 @@ def parse_link(page_link: str) -> dict:
         return data_dict
 
     except requests.RequestException as e:
-        print(f"Failed to fetch {page_link}: {e}")
+        logger.error(f"Failed to fetch {page_link}: {e}")
         return {}
 
 
 def parse_asko_links() -> int:
     total_parsed_links = 0
     all_sofas_parsed_links = []
-    with open("links-gathered-asko.txt", "r", encoding="utf-8") as f:
+    with open("crawler/links-gathered-asko.txt", "r", encoding="utf-8") as f:
         links = f.readlines()
 
         for link in links:
-            print(f"Parsing link: {link}")
+            logger.info(f"Parsing link: {link}")
             parsed_data = parse_link(link.strip())
             if len(parsed_data) == 0:
                 continue
 
             if not finalize_parsed_dict(all_sofas_parsed_links, parsed_data):
-                print(f"Failed to parse link: {link}")
+                logger.error(f"Failed to parse link: {link}")
             else:
                 total_parsed_links += 1
 
