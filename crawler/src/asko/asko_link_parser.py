@@ -2,7 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 from loguru import logger
 
-from crawler.src.util import init_data_map, ASKO_DESCRIPTION_KEYS, finalize_parsed_dict, append_parsed_data, get_soup_parser
+from crawler.src.util import init_data_map, ASKO_DESCRIPTION_KEYS, finalize_parsed_dict, append_parsed_data, \
+    get_soup_parser, has_type_been_assigned
 
 
 def asko_check_whether_contains_metal(li_value: str) -> bool:
@@ -57,11 +58,24 @@ def check_all_th_elements_in_parameters(th_elements, data_dict):
             dimensions = td_value_parsed.split(',')[0].split('x')
             data_dict["dimensions"] = int(dimensions[0].split('-')[0]) + int(dimensions[1].split('-')[0]) + int(dimensions[2].split('-')[0])
 
+def determine_type_of_furniture(data_dict, value: str) -> None:
+    if any(substring.lower().strip() in value.lower().strip() for substring in ["židle", "stolička", "židlí", "stoličky"]):
+        data_dict["is_chair"] = 1
+    elif any(substring.lower().strip() in value.lower().strip() for substring in ["stůl", "konferenční", "jídelní", "kancelářský"]):
+        data_dict["is_table"] = 1
+    elif any(substring.lower().strip() in value.lower().strip() for substring in ["pohovka", "gauč", "křeslo", "křesla", "dvojsedák", "trojsedák"]):
+        data_dict["is_sofa"] = 1
 
 def check_all_li_elements_in_description(li_elements, data_dict):
-    for li in li_elements:
+    for index, li in enumerate(li_elements):
+
+        if index == 0 and not has_type_been_assigned(data_dict):
+            determine_type_of_furniture(data_dict, li)
+            continue
+
         if ":" not in li.text.lower().strip():
             continue
+
         li_key, li_value = li.text.split(':', maxsplit=1)
         li_key = li_key.split(' ', 1)[0].lower().strip()
         if li_key.split(' ', 1)[0].lower().strip() not in ASKO_DESCRIPTION_KEYS:
@@ -99,6 +113,9 @@ def parse_link(page_link: str) -> dict:
 
         data_dict = init_data_map()
         price_text = get_asko_price(data_dict, soup)
+        type_of_furniture_header = soup.find('h1', class_='product-title-desktop').text.strip()
+
+        determine_type_of_furniture(data_dict, type_of_furniture_header)
 
         if price_text is None:
             raise Exception("Price not found")
@@ -124,7 +141,7 @@ def parse_asko_links() -> int:
         links = f.readlines()
 
         for link in links:
-            logger.info(f"Parsing link: {link}")
+            logger.info(f"Parsing link: {link.strip()}")
             parsed_data = parse_link(link.strip())
             if len(parsed_data) == 0:
                 continue
