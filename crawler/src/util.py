@@ -71,6 +71,9 @@ def finalize_parsed_dict(all_sofas_parsed_links: list, data_dict: dict) -> bool:
     logger.success(f"Parsed data: {data_dict}")
     return True
 
+def has_type_been_assigned(data_dict: dict) -> bool:
+    return data_dict["is_sofa"] == 1 or data_dict["is_table"] == 1 or data_dict["is_chair"] == 1
+
 def map_key(key: str) -> str:
     match key:
         case "šířka":
