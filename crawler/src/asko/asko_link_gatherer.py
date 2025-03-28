@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from loguru import logger
 
 BASE_URL = "https://www.asko-nabytek.cz"
 OUTPUT_FILE = "links-gathered-asko.txt"
@@ -9,6 +10,7 @@ END_PAGE = 1
 all_links = []
 
 def fetch_links() -> int:
+    logger.info(f"Start fetching links from {BASE_URL}")
     for page in range(START_PAGE, END_PAGE, -1):
         url = f"{BASE_URL}/pohovky?page={page}"
         print(f"Fetching page {page} - {url}...")
