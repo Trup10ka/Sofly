@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "sofly"
 version = "0.1.0"
-description = "Web abb for advertising custom Sofas - whitch predition of their price -> LLM"
+description = "Web application for insurance companies to manage their insurance policies and claims."
 authors = ["Lukáš Friedl <lukys3036@gmail.com>"]
 license = "MIT"
 readme = "README.md"
