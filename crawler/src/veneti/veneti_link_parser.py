@@ -1,8 +1,9 @@
 import re
 
-from bs4 import BeautifulSoup
 from requests import RequestException
 from loguru import logger
+
+from crawler.src.asko.asko_link_parser import determine_asko_type_of_furniture
 from crawler.src.util import get_soup_parser, init_data_map, finalize_parsed_dict, map_key, append_parsed_data
 
 
@@ -15,24 +16,28 @@ def assign_material(data_dict, value):
         data_dict["material_none"] = 1
 
 
-def assign_type_of_furniture(data_dict, value):
-    if any(mapped_key in value.lower() for mapped_key in ["židle", "stolička", "židlí", "stoličky"]):
-        data_dict["is_chair"] = 1
+def determine_veneti_type_of_furniture(data_dict: dict, value: str):
+    if not value:
+        data_dict["ERROR"] = 1
+        return
+    value = value.lower().strip()
 
-    elif any(mapped_key in value.lower() for mapped_key in ["stůl", "konferenční", "jídelní", "kancelářský"]):
+    if any(mapped_key in value for mapped_key in ["stůl", "konferenční", "jídelní", "kancelářský"]):
         data_dict["is_table"] = 1
-    elif any(mapped_key in value.lower() for mapped_key in ["pohovka", "gauč", "křeslo", "křesla"]):
+    elif any(mapped_key in value for mapped_key in ["židle", "stolička", "židlí", "stoličky"]):
+        data_dict["is_chair"] = 1
+    elif any(mapped_key in value for mapped_key in ["pohovka", "gauč", "křeslo", "křesla"]):
         data_dict["is_sofa"] = 1
+    else:
+        data_dict["ERROR"] = 1
 
 
 def process_value(data_dict, value, key):
     mapped_key = map_key(key.lower().strip())
     value = value.text.strip().lower()
 
-    if mapped_key in ["width", "length", "depth"]:
+    if mapped_key == "cover_material":
         assign_material(data_dict, value)
-        return
-    assign_type_of_furniture(data_dict, value)
 
     if mapped_key in ["width", "length", "depth"]:
         data_dict["dimensions"] = data_dict["dimensions"] + float(re.search(r'\d+', value).group())
@@ -42,7 +47,6 @@ def parse_veneti_price(price_text: str) -> float:
     cleaned_price_text = re.sub(r'[^\d,.-]', '', price_text)
     return float(cleaned_price_text.replace(",", "."))
 
-# TODO: implement first checking what type of furniture it is, then deside the procedure how to parse it
 def parse_veneti_link(page_link: str) -> dict:
     try:
         soup = get_soup_parser(page_link)
@@ -56,6 +60,8 @@ def parse_veneti_link(page_link: str) -> dict:
 
         data_dict = init_data_map()
         data_dict["price"] = parse_veneti_price(price_text)
+
+        determine_veneti_type_of_furniture(data_dict, soup.find("h1", class_ = "product-detail-name").text.strip())
 
         keys = soup.find_all('dt', class_='name')
         values = soup.find_all('dd', class_='value')
