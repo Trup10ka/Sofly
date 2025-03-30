@@ -1,6 +1,6 @@
 from src.sofly_server import SoflyServer
 
-if __name__ == '__main__':
+def main():
     server = (SoflyServer.builder()
               .set_host('0.0.0.0')
               .set_port(5525)
@@ -11,3 +11,6 @@ if __name__ == '__main__':
 
     server.init()
     server.run()
+
+if __name__ == '__main__':
+    main()
