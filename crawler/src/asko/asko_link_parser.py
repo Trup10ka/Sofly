@@ -58,7 +58,7 @@ def check_all_th_elements_in_parameters(th_elements, data_dict):
             dimensions = td_value_parsed.split(',')[0].split('x')
             data_dict["dimensions"] = int(dimensions[0].split('-')[0]) + int(dimensions[1].split('-')[0]) + int(dimensions[2].split('-')[0])
 
-def determine_type_of_furniture(data_dict, value: str) -> None:
+def determine_asko_type_of_furniture(data_dict, value: str) -> None:
     if any(substring.lower().strip() in value.lower().strip() for substring in ["židle", "stolička", "židlí", "stoličky"]):
         data_dict["is_chair"] = 1
     elif any(substring.lower().strip() in value.lower().strip() for substring in ["stůl", "konferenční", "jídelní", "kancelářský"]):
@@ -70,7 +70,7 @@ def check_all_li_elements_in_description(li_elements, data_dict):
     for index, li in enumerate(li_elements):
 
         if index == 0 and not has_type_been_assigned(data_dict):
-            determine_type_of_furniture(data_dict, li)
+            determine_asko_type_of_furniture(data_dict, li)
             continue
 
         if ":" not in li.text.lower().strip():
@@ -115,7 +115,7 @@ def parse_link(page_link: str) -> dict:
         price_text = get_asko_price(data_dict, soup)
         type_of_furniture_header = soup.find('h1', class_='product-title-desktop').text.strip()
 
-        determine_type_of_furniture(data_dict, type_of_furniture_header)
+        determine_asko_type_of_furniture(data_dict, type_of_furniture_header)
 
         if price_text is None:
             raise Exception("Price not found")
