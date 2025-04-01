@@ -1,6 +1,8 @@
+import src.config as cf
+
 class SoflyConfig:
 
-    def __init__(self, database=None, server=None, logging=None):
+    def __init__(self, database: 'cf.DatabaseConfig' = None, server: 'cf.ServerConfig' = None, logging: 'cf.LoggingConfig' = None):
         self.database = database
         self.server = server
         self.logging = logging
