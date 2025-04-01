@@ -19,12 +19,20 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     height: 100vh;
     position: relative;
     background-color: #EDE1F2;
+    gap: 15px;
 }
 
-form label, h2 {
+form label {
+    color: #EEE1F2;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+form h2 {
     color: #EEE1F2;
     font-weight: bold;
 }
@@ -41,7 +49,7 @@ form label, h2 {
     background: #56328E;
     padding: 20px;
     border-radius: 25px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 10px rgba(158, 97, 246, 0.95);
     width: 400px;
     text-align: center;
 }
@@ -63,6 +71,11 @@ form label, h2 {
     border: 1px solid #53308B;
     background-color: #B689DC;
     border-radius: 20px;
+    color: #53308B;
+}
+
+.login-form input:focus {
+    outline: 2px solid #EDE1F2; /* Purple color */
 }
 
 .login-form button {
