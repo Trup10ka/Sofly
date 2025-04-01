@@ -79,6 +79,23 @@ form label, h2 {
     background-color: #edd8f6;
 }
 
+.register-button {
+    margin-top: 10px;
+    padding: 10px 25px;
+    background-color: #53308B;
+    border: none;
+    color: #EDE1F2;
+    border-radius: 20px;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+    text-decoration: none;
+}
+
+.register-button:hover {
+    background-color: #43206B;
+}
+
 .comfortaa-normal {
   font-family: "Comfortaa", sans-serif;
   font-optical-sizing: auto;
