@@ -25,20 +25,28 @@ def init_api_endpoints(api_blueprint: Blueprint):
 
 
 def init_html_endpoints(app: Flask):
+
+    HTML_DIR = '../sites'
+
     @app.route('/')
     def serve_index():
         logger.info("Request to '/' from origin: ")
-        return send_from_directory('..', 'index.html')
+        return send_from_directory(HTML_DIR, 'index.html')
 
-    @app.route('/sofas')
+    @app.route('/dashboard')
     def serve_sofas():
         logger.info("Request to '/sofas' from origin: ")
-        return send_from_directory('..', 'sofas.html')
+        return send_from_directory(HTML_DIR, 'dashboard.html')
 
-    @app.route('/tables')
+    @app.route('/insurance')
     def serve_tables():
         logger.info("Request to '/tables' from origin: ")
-        return send_from_directory('..', 'tables.html')
+        return send_from_directory(HTML_DIR, 'insurance.html')
+
+    @app.route('/insured-event')
+    def serve_insured_event():
+        logger.info("Request to '/insured-event' from origin: ")
+        return send_from_directory(HTML_DIR, 'insured-event.html')
 
 
 def register_all_blueprints(app: Flask, *blueprints):
