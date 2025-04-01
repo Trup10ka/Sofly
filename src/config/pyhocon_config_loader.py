@@ -2,6 +2,7 @@ import pyhocon as hoc
 
 import src.config as cf_p
 from src.config.config_loader import ConfigLoader
+from loguru import logger
 
 class PyhoconConfigLoader(ConfigLoader):
     """
@@ -9,12 +10,19 @@ class PyhoconConfigLoader(ConfigLoader):
 
     This class is responsible for loading configuration files in HOCON format.
     """
-    def load_config(self) -> cf_p.SoflyConfig:
+    def load_config(self) -> cf_p.SoflyConfig | int:
         """
         Load the configuration from a Hocon file using pyhocon lib.
         """
+        if self.copy_default_confi_if_not_exists():
+            logger.warning(f"Default configuration file copied to {self.config_file_path}, program will now exit.")
+            return 1
 
         config = hoc.ConfigFactory.parse_file(self.config_file_path)
+
+        if config is None:
+            logger.error("Failed to load configuration file.")
+            return -1
 
         database_host = config.get_string("database.host")
         database_port = config.get_int("database.port")
