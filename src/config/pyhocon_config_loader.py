@@ -1,13 +1,7 @@
 import pyhocon as hoc
 
-from src.config.config import SoflyConfig
+import src.config as cf_p
 from src.config.config_loader import ConfigLoader
-
-### TYPE ALIAS ###
-DatabaseConfig = SoflyConfig.DatabaseConfig
-LoggingConfig = SoflyConfig.LoggingConfig
-ServerConfig = SoflyConfig.ServerConfig
-### END TYPE ALIAS ###
 
 class PyhoconConfigLoader(ConfigLoader):
     """
@@ -15,7 +9,7 @@ class PyhoconConfigLoader(ConfigLoader):
 
     This class is responsible for loading configuration files in HOCON format.
     """
-    def load_config(self) -> SoflyConfig:
+    def load_config(self) -> cf_p.SoflyConfig:
         """
         Load the configuration from a Hocon file using pyhocon lib.
         """
@@ -34,19 +28,19 @@ class PyhoconConfigLoader(ConfigLoader):
         server_host = config.get_string("server.host")
         server_port = config.get_int("server.port")
 
-        sofly_config = SoflyConfig(
-            database = DatabaseConfig(
+        sofly_config = cf_p.SoflyConfig(
+            database = cf_p.DatabaseConfig(
                 database_host,
                 database_port,
                 database_username,
                 database_password,
                 database_name
             ),
-            logging = LoggingConfig(
+            logging = cf_p.LoggingConfig(
                 logging_level,
                 logging_file_path
             ),
-            server = ServerConfig(
+            server = cf_p.ServerConfig(
                 server_host,
                 server_port
             )
