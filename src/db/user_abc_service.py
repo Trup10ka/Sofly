@@ -1,34 +1,41 @@
 from abc import abstractmethod, ABC
 from src.data import UserDTO, User
+from src.db.db_client import SoflyDbClient
 
 
 class UserService(ABC):
 
+    def __init__(self, db_client: SoflyDbClient):
+        """
+        Initialize the UserService.
+        """
+        self.db_client = db_client
+
     @abstractmethod
-    def create_user(self, user_data: UserDTO) -> bool:
+    async def create_user(self, user_data: UserDTO) -> bool:
         """Create a new user."""
         pass
 
     @abstractmethod
-    def get_user_by_id(self, user_id: int) -> User | None:
+    async def get_user_by_id(self, user_id: int) -> User | None:
         """Get a user by ID."""
         pass
 
     @abstractmethod
-    def get_user_by_username(self, username: str) -> User | None:
+    async def get_user_by_username(self, username: str) -> User | None:
         """Get a user by username."""
         pass
 
     @abstractmethod
-    def get_user_by_email(self, email: str) -> User | None:
+    async def get_user_by_email(self, email: str) -> User | None:
         """Get a user by email."""
         pass
 
     @abstractmethod
-    def get_all_users(self) -> list[User]:
+    async def get_all_users(self) -> list[User]:
         """Get all users."""
         pass
 
     @abstractmethod
-    def delete_user(self, user_id: int) -> bool:
+    async def delete_user(self, user_id: int) -> bool:
         pass

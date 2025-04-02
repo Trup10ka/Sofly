@@ -35,7 +35,7 @@ class SoflyDbClient:
         Initialize all services that depend on the database connection.
         This method should be overridden in subclasses to initialize specific services.
         """
-        self.user_service = UserSoflyService()
+        self.user_service = UserSoflyService(self)
 
     async def connect(self):
         try:
