@@ -1,10 +1,11 @@
 import os
-from flask import Flask, send_from_directory
+import src.sofly_endpoints as sofly_endpoints
+
+from flask import Flask
 from loguru import logger
 
 from src.db import SoflyDbClient
 from src.security import JWTService
-from src.sofly_endpoints import init_endpoints
 
 
 class SoflyServer:
@@ -63,7 +64,7 @@ class SoflyServer:
     def init(self):
         logger.info("Initializing SoflyServer")
         self.init_static_folder()
-        init_endpoints(self)
+        sofly_endpoints.init_endpoints(self)
 
     def init_static_folder(self):
         logger.info("Initializing static folder")

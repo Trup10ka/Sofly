@@ -1,9 +1,11 @@
+import src.sofly_server as sofly
+
 from flask import Flask, Blueprint
 from src.endpoints import init_html_endpoints, init_api_endpoints
-from src.sofly_server import SoflyServer
 
 
-def init_endpoints(app: SoflyServer):
+
+def init_endpoints(app: 'sofly.SoflyServer'):
     api_endpoint = Blueprint('api_endpoint', __name__, url_prefix='/api')
 
     init_api_endpoints(api_endpoint, app.jwt_service, app.db_client.user_service)

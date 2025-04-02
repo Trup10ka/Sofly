@@ -2,7 +2,7 @@ import aiomysql
 from loguru import logger
 
 from src.config import DatabaseConfig
-from src.db import UserSoflyService
+from src.db.user_sofly_service import UserSoflyService
 
 class SoflyDbClient:
     """
