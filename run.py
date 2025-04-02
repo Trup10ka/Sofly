@@ -1,17 +1,25 @@
+import asyncio
+
 from loguru import logger
 
 from src.config.pyhocon_config_loader import PyhoconConfigLoader
+from src.db.db_client import SoflyDbClient
 from src.sofly_server import SoflyServer
 
-def main():
+async def main():
 
     config = PyhoconConfigLoader("config.conf").load_config()
+
 
     if config == -1:
         logger.critical("Failed to load configuration file, exiting...")
         return
     elif config == 1:
         logger.info("Exiting program.")
+        return
+
+    db_client = SoflyDbClient(config.database)
+    if not await db_client.init_db_client():
         return
 
     server = (SoflyServer.builder()
@@ -26,4 +34,4 @@ def main():
     server.run()
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())
