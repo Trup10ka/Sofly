@@ -1,11 +1,12 @@
+import src.db.db_client as db_c
+
 from abc import abstractmethod, ABC
 from src.data import UserDTO, User
-from src.db.db_client import SoflyDbClient
 
 
 class UserService(ABC):
 
-    def __init__(self, db_client: SoflyDbClient):
+    def __init__(self, db_client: 'db_c.SoflyDbClient'):
         """
         Initialize the UserService.
         """

@@ -6,7 +6,7 @@ from src.db.user_abc_service import UserService
 
 class UserSoflyService(UserService):
 
-    def __init__(self, db_client: db_c.SoflyDbClient):
+    def __init__(self, db_client: 'db_c.SoflyDbClient'):
         """
         Initialize the UserSoflyService with a database client.
         """
