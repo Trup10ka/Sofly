@@ -49,7 +49,7 @@ class SoflyServer:
                     should_create_public_dir: bool = True,
                  ) -> None:
         logger.info(f"Creating SoflyServer instance with static: {static_folder_path}, templates: {template_folder}")
-        self.app = Flask(__name__, static_folder=static_folder_path, template_folder=template_folder)
+        self.flask_app = Flask(__name__, static_folder=static_folder_path, template_folder=template_folder)
 
         self.host = host
         self.port = port
@@ -63,14 +63,14 @@ class SoflyServer:
     def init(self):
         logger.info("Initializing SoflyServer")
         self.init_static_folder()
-        init_endpoints(self.app)
+        init_endpoints(self)
 
     def init_static_folder(self):
         logger.info("Initializing static folder")
 
         if self.should_create_public_dir:
-            os.makedirs(self.app.static_folder, exist_ok=True)
-            logger.info(f"Ensured static folder exists: {self.app.static_folder}")
+            os.makedirs(self.flask_app.static_folder, exist_ok=True)
+            logger.info(f"Ensured static folder exists: {self.flask_app.static_folder}")
 
 
     @classmethod
@@ -79,13 +79,15 @@ class SoflyServer:
 
     def run(self) -> None:
         logger.info(f"Running SoflyServer on {self.host}:{self.port}")
-        self.app.run(host=self.host, port=self.port, debug=self.is_debug)
+        self.flask_app.run(host=self.host, port=self.port, debug=self.is_debug)
 
 
 class SoflyServerBuilder:
     def __init__(self):
         self._static_folder = os.path.join(os.getcwd(), 'public')
         self._template_folder = 'templates'
+        self._db_client = None
+        self._jwt_service = None
         self._is_debug = True
         self._should_create_public_dir = True
         self._host = None
@@ -115,15 +117,32 @@ class SoflyServerBuilder:
         self._port = port
         return self
 
+    def set_db_client(self, db_client: SoflyDbClient):
+        self._db_client = db_client
+        return self
+
+    def set_jwt_service(self, jwt_service: JWTService):
+        self._jwt_service = jwt_service
+        return self
+
     def build(self) -> SoflyServer | None:
 
         if self._host is None:
             logger.critical("You must provide a host - host not provided")
             return None
 
+        if self._db_client is None:
+            logger.critical("You must provide a database client - db_client not provided")
+            return None
+        if self._jwt_service is None:
+            logger.critical("You must provide a JWT service - jwt_service not provided")
+            return None
+
         return SoflyServer(
             host=self._host,
             port=self._port,
+            jwt_service=self._jwt_service,
+            db_client=self._db_client,
             static_folder_path=self._static_folder,
             template_folder=self._template_folder,
             is_debug=self._is_debug,
