@@ -1,7 +1,7 @@
 import os
 from flask import Flask, send_from_directory
 from loguru import logger
-from src.endpoints import init_endpoints
+from src.sofly_endpoints import init_endpoints
 
 
 class SoflyServer:
