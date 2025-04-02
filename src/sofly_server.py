@@ -1,6 +1,9 @@
 import os
 from flask import Flask, send_from_directory
 from loguru import logger
+
+from src.db import SoflyDbClient
+from src.security import JWTService
 from src.sofly_endpoints import init_endpoints
 
 
@@ -23,6 +26,10 @@ class SoflyServer:
         Whether the server is in debug mode
     - should_create_public_dir: bool | Default value is True
         Whether the server should create a public directory for static files
+    - JWTService: JWTService
+        The JWT service to handle token generation and verification
+    - DbClient: DbClient
+        The database client to interact with the database
     """
 
     def __new__(cls, *args, **kwargs):
@@ -32,12 +39,15 @@ class SoflyServer:
         return super(SoflyServer, cls).__new__(cls)
 
     def __init__(self,
-                 host: str,
-                 port: int = 5000,
-                 static_folder_path: str = os.path.join(os.getcwd(), 'public'),
-                 template_folder: str = os.path.join(os.getcwd(),'templates'),
-                 is_debug: bool = True,
-                 should_create_public_dir: bool = True) -> None:
+                    host: str,
+                    jwt_service: JWTService,
+                    db_client: SoflyDbClient,
+                    port: int = 5000,
+                    static_folder_path: str = os.path.join(os.getcwd(), 'public'),
+                    template_folder: str = os.path.join(os.getcwd(),'templates'),
+                    is_debug: bool = True,
+                    should_create_public_dir: bool = True,
+                 ) -> None:
         logger.info(f"Creating SoflyServer instance with static: {static_folder_path}, templates: {template_folder}")
         self.app = Flask(__name__, static_folder=static_folder_path, template_folder=template_folder)
 
@@ -45,6 +55,8 @@ class SoflyServer:
         self.port = port
         self.is_debug = is_debug
         self.should_create_public_dir = should_create_public_dir
+        self.jwt_service = jwt_service
+        self.db_client = db_client
 
         logger.success("Created SoflyServer instance")
 
