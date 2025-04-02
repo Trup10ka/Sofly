@@ -1,4 +1,4 @@
-import asyncpg
+import aiomysql
 from loguru import logger
 
 from src.config import DatabaseConfig
@@ -29,7 +29,7 @@ class SoflyDbClient:
 
     async def connect(self):
         try:
-            self.pool = await asyncpg.create_pool(
+            self.pool = await aiomysql.create_pool(
                 user=self.config.username,
                 password=self.config.password,
                 database=self.config.database,
