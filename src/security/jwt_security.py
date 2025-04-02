@@ -20,7 +20,7 @@ class JWTService:
         else:
             logger.critical("JWTService was not provided with a secret key.")
 
-    def __init__(self, secret_key):
+    def __init__(self, secret_key: str):
         """
         Initialize the JWTService with a secret key.
         :param secret_key: Secret key for signing JWT tokens.

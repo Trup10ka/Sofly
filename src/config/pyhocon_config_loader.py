@@ -36,6 +36,8 @@ class PyhoconConfigLoader(ConfigLoader):
         server_host = config.get_string("server.host")
         server_port = config.get_int("server.port")
 
+        jwt_secret = config.get_string("jwt-secret")
+
         sofly_config = cf_p.SoflyConfig(
             database = cf_p.DatabaseConfig(
                 database_host,
@@ -51,7 +53,8 @@ class PyhoconConfigLoader(ConfigLoader):
             server = cf_p.ServerConfig(
                 server_host,
                 server_port
-            )
+            ),
+            jwt_secret = jwt_secret
         )
 
         return sofly_config
