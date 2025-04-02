@@ -36,15 +36,15 @@ class SoflyConfig:
         return f"SoflyConfig(database={self.database}, server={self.server}, logging={self.logging})"
 
     class DatabaseConfig:
-        def __init__(self, host: str = None, port: int = None, username: str = None, password: str = None, database: str = None):
+        def __init__(self, host: str = None, port: int = None, username: str = None, password: str = None, db_name: str = None):
             self.host = host
             self.port = port
             self.username = username
             self.password = password
-            self.database = database
+            self.db_name = db_name
 
         def __str__(self):
-            return f"DatabaseConfig(host={self.host}, port={self.port}, username={self.username}, password={self.password}, database={self.database})"
+            return f"DatabaseConfig(host={self.host}, port={self.port}, username={self.username}, password={self.password}, database={self.db_name})"
 
     class LoggingConfig:
         def __init__(self, level=None, file_path=None):
