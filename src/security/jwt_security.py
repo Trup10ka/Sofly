@@ -1,3 +1,5 @@
+from typing import Any
+
 import jwt
 from datetime import datetime, timedelta
 
@@ -36,17 +38,16 @@ class JWTService:
         payload["exp"] = expiration_time
         return jwt.encode(payload, self.secret_key, algorithm="HS256")
 
-    def verify_jwt(self, token: str) -> dict | None:
+    def verify_jwt(self, token: str) -> tuple[dict[str, str], int]:
         """
         Verify and decode a JWT token.
         :param token: JWT token to verify.
-        :return: Decoded payload if valid, otherwise None.
+        :return: Tuple containing the decoded payload or JSON with an error message, both with status code.
         """
         try:
-            decoded_payload = jwt.decode(token, self.secret_key, algorithms=["HS256"])
-            return decoded_payload
+            decoded_payload: dict = jwt.decode(token, self.secret_key, algorithms=["HS256"])
+            return decoded_payload, 200
         except jwt.ExpiredSignatureError:
-            print("Error: Token has expired.")
+            return { "error_message": "Token has expired." }, 430
         except jwt.InvalidTokenError:
-            print("Error: Invalid token.")
-        return None
+            return { "error_message": "Invalid token." }, 432
