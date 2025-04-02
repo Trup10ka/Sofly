@@ -1,4 +1,4 @@
-from .config import SoflyConfig
+from .sofly_config import SoflyConfig
 
 ### TYPE ALIAS ###
 DatabaseConfig = SoflyConfig.DatabaseConfig
@@ -6,4 +6,4 @@ LoggingConfig = SoflyConfig.LoggingConfig
 ServerConfig = SoflyConfig.ServerConfig
 ### END TYPE ALIAS ###
 
-__all__ = [ "SoflyConfig" ]
+__all__ = [ "SoflyConfig", "DatabaseConfig", "LoggingConfig", "ServerConfig" ]

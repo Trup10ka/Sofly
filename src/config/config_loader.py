@@ -5,7 +5,7 @@ from abc import abstractmethod, ABC
 
 from loguru import logger
 
-from src.config.config import SoflyConfig
+from src.config.sofly_config import SoflyConfig
 
 
 class ConfigLoader(ABC):
