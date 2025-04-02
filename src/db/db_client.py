@@ -32,9 +32,9 @@ class SoflyDbClient:
             self.pool = await aiomysql.create_pool(
                 user=self.config.username,
                 password=self.config.password,
-                database=self.config.database,
                 host=self.config.host,
                 port=self.config.port,
+                db=self.config.db_name,
             )
             logger.success("Database connection established.")
         except ConnectionRefusedError as conn_ref:
