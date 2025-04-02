@@ -2,6 +2,7 @@ import aiomysql
 from loguru import logger
 
 from src.config import DatabaseConfig
+from src.db import UserSoflyService
 
 class SoflyDbClient:
     """
@@ -16,6 +17,7 @@ class SoflyDbClient:
         """
         self.config = config
         self.pool = None
+        self.user_service = None
 
     async def init_db_client(self) -> bool:
         """
@@ -24,8 +26,16 @@ class SoflyDbClient:
         """
         logger.info("Establishing connection with database...")
         await self.connect()
+        self.init_all_services()
         logger.info("Running post init check...")
         return self.post_init_check()
+
+    def init_all_services(self):
+        """
+        Initialize all services that depend on the database connection.
+        This method should be overridden in subclasses to initialize specific services.
+        """
+        self.user_service = UserSoflyService()
 
     async def connect(self):
         try:
