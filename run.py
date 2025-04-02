@@ -7,10 +7,9 @@ from src.db.db_client import SoflyDbClient
 from src.security import JWTService
 from src.sofly_server import SoflyServer
 
+
 async def main():
-
     config = PyhoconConfigLoader("config.conf").load_config()
-
 
     if config == -1:
         logger.critical("Failed to load configuration file, exiting...")
@@ -23,11 +22,13 @@ async def main():
     if not await db_client.init_db_client():
         return
 
-    jwt_service = JWTService(config.jwt.secret_key)
+    jwt_service = JWTService(config.jwt_secret)
 
     server = (SoflyServer.builder()
               .set_host(config.server.host)
               .set_port(config.server.port)
+              .set_jwt_service(jwt_service)
+              .set_db_client(db_client)
               .build())
 
     if server is None:
@@ -35,6 +36,7 @@ async def main():
 
     server.init()
     server.run()
+
 
 if __name__ == '__main__':
     asyncio.run(main())
