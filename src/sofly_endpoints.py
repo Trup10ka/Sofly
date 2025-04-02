@@ -1,5 +1,5 @@
 from flask import Flask, Blueprint
-from endpoints import init_html_endpoints, init_api_endpoints
+from src.endpoints import init_html_endpoints, init_api_endpoints
 
 
 def init_endpoints(app: Flask):
