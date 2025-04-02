@@ -16,6 +16,7 @@ CREATE TABLE type_of_insurance
 CREATE TABLE insurance
 (
     id                INT PRIMARY KEY AUTO_INCREMENT,
+    sofly_uuid              CHAR(36) NOT NULL DEFAULT (UUID()),
     type_of_insurance INT NOT NULL,
     user_id           INT NOT NULL,
     start_date        DATE,
