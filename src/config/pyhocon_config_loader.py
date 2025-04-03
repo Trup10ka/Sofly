@@ -56,5 +56,5 @@ class PyhoconConfigLoader(ConfigLoader):
             ),
             jwt_secret = jwt_secret
         )
-
+        logger.success("Config loaded successfully.")
         return sofly_config
