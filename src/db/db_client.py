@@ -53,6 +53,7 @@ class SoflyDbClient:
                 host=self.config.host,
                 user=self.config.username,
                 password=self.config.password,
+                port=self.config.port,
                 database=self.config.db_name,
                 autocommit=False,
                 cursorclass=pymysql.cursors.DictCursor  # Return results as dictionaries
