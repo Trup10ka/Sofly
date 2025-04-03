@@ -15,9 +15,9 @@ class UserSoflyService(UserService):
         """
         super().__init__(db_client)
 
-    async def create_user(self, user_data: UserDTO) -> bool:
+    def create_user(self, user_data: UserDTO) -> bool:
         try:
-            result = await self.db_client.execute(
+            result = self.db_client.execute(
                 "INSERT INTO users (username, email, password_hash) VALUES (%s, %s, %s)",
                 user_data.username, user_data.email, user_data.password_hash
             )
@@ -29,8 +29,8 @@ class UserSoflyService(UserService):
             logger.error(f"Exception: {e}")
             return False
 
-    async def get_user_by_id(self, user_id: int) -> User | None:
-        result = await self.db_client.fetch(
+    def get_user_by_id(self, user_id: int) -> User | None:
+        result = self.db_client.fetch(
             "SELECT * FROM users WHERE id = %s",
             user_id
         )
@@ -45,8 +45,8 @@ class UserSoflyService(UserService):
             )
         return None
 
-    async def get_user_by_username(self, username: str) -> User | None:
-        result = await self.db_client.fetch(
+    def get_user_by_username(self, username: str) -> User | None:
+        result = self.db_client.fetch(
             "SELECT * FROM users WHERE username = %s",
             username
         )
@@ -62,8 +62,8 @@ class UserSoflyService(UserService):
 
         return None
 
-    async def get_user_by_email(self, email: str) -> User | None:
-        result = await self.db_client.fetch(
+    def get_user_by_email(self, email: str) -> User | None:
+        result = self.db_client.fetch(
             "SELECT * FROM users WHERE email = %s",
             email
         )
@@ -78,8 +78,8 @@ class UserSoflyService(UserService):
             )
         return None
 
-    async def get_all_users(self) -> list[User]:
-        result = await self.db_client.fetch(
+    def get_all_users(self) -> list[User]:
+        result = self.db_client.fetch(
             "SELECT * FROM users"
         )
 
@@ -95,8 +95,8 @@ class UserSoflyService(UserService):
             )
         return users
 
-    async def delete_user(self, user_id: int) -> bool:
-        result = await self.db_client.execute(
+    def delete_user(self, user_id: int) -> bool:
+        result = self.db_client.execute(
             "DELETE FROM users WHERE id = %s",
             user_id
         )

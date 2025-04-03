@@ -1,7 +1,10 @@
-import aiomysql
+import pymysql
 from loguru import logger
+from dbutils.pooled_db import PooledDB
 
 from src.config import DatabaseConfig
+from src.db.insurance_abc_service import InsuranceService
+from src.db.insurance_sofly_service import InsuranceSoflyService
 from src.db.user_sofly_service import UserSoflyService
 from src.db.user_abc_service import UserService
 
@@ -19,14 +22,15 @@ class SoflyDbClient:
         self.config = config
         self.pool = None
         self.user_service: UserService | None = None
+        self.insurance_service: InsuranceService | None = None
 
-    async def init_db_client(self) -> bool:
+    def init_db_client(self) -> bool:
         """
         Initialize the database client.
         This method is called after the server is initialized.
         """
         logger.info("Establishing connection with database...")
-        await self.connect()
+        self.connect()
         self.init_all_services()
         logger.info("Running post init check...")
         return self.post_init_check()
@@ -37,19 +41,25 @@ class SoflyDbClient:
         This method should be overridden in subclasses to initialize specific services.
         """
         self.user_service = UserSoflyService(self)
+        self.insurance_service = InsuranceSoflyService(self)
 
-    async def connect(self):
+    def connect(self):
         try:
-            self.pool = await aiomysql.create_pool(
+            self.pool = PooledDB(
+                creator=pymysql,
+                mincached=1,
+                maxcached=5,
+                blocking=True,
+                host=self.config.host,
                 user=self.config.username,
                 password=self.config.password,
-                host=self.config.host,
-                port=self.config.port,
-                db=self.config.db_name,
+                database=self.config.db_name,
+                autocommit=False,
+                cursorclass=pymysql.cursors.DictCursor  # Return results as dictionaries
             )
             logger.success("Database connection established.")
-        except ConnectionRefusedError as conn_ref:
-            logger.critical("Connection refused. Possible cause is wrong IP or PORT, please check the configuration file.")
+        except pymysql.MySQLError as e:
+            logger.critical(f"Connection refused. Error: {e}")
 
     def post_init_check(self):
         if self.pool is None:
@@ -59,22 +69,28 @@ class SoflyDbClient:
             logger.success("All post init checks passed.")
             return True
 
-    async def fetch(self, query: str, *args):
+    def fetch(self, query, *args):
         """Execute a query and return the results."""
-        async with self.pool.acquire() as conn:
-            async with conn.cursor(aiomysql.DictCursor) as cursor:
-                await cursor.execute(query, args)
-                return await cursor.fetchall()
+        connection = self.pool.connection()
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(query, args)
+                return cursor.fetchall()
+        finally:
+            connection.close()
 
-    async def execute(self, query: str, *args) -> int:
+    def execute(self, query, *args):
         """Execute a query without returning results."""
-        async with self.pool.acquire() as conn:
-            async with conn.cursor() as cursor:
-                await cursor.execute(query, args)
-                await conn.commit()
-                return cursor.rowcount
+        connection = self.pool.connection()
+        try:
+            with connection.cursor() as cursor:
+                result = cursor.execute(query, args)
+                connection.commit()
+                return result
+        finally:
+            connection.close()
 
-    async def close(self):
+    def close(self):
         """Close the database connection pool."""
         if self.pool:
-            await self.pool.close()
+            self.pool.close()

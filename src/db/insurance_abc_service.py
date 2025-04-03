@@ -11,25 +11,25 @@ class InsuranceService(ABC):
         self.db_client = db_client
 
     @abstractmethod
-    async def create_insurance(self, insurance_data: InsuranceDTO) -> bool:
+    def create_insurance(self, insurance_data: InsuranceDTO) -> bool:
         pass
 
     @abstractmethod
-    async def get_insurance_by_id(self, insurance_id: str) -> Insurance | None:
+    def get_insurance_by_id(self, insurance_id: str) -> Insurance | None:
         pass
 
     @abstractmethod
-    async def get_insurance_by_sofly_id(self, insurance_name: str) -> Insurance | None:
+    def get_insurance_by_sofly_id(self, insurance_name: str) -> Insurance | None:
         pass
 
     @abstractmethod
-    async def change_state_of_insurance(self, insurance_id: str, state: str) -> Insurance | None:
+    def change_state_of_insurance(self, insurance_id: str, state: str) -> Insurance | None:
         pass
 
     @abstractmethod
-    async def get_all_insurances_by_user(self, user_id: str) -> list[Insurance]:
+    def get_all_insurances_by_user(self, user_id: str) -> list[Insurance]:
         pass
 
     @abstractmethod
-    async def get_all_insurances(self) -> list[Insurance]:
+    def get_all_insurances(self) -> list[Insurance]:
         pass

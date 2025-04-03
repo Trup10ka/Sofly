@@ -8,7 +8,7 @@ from src.db import SoflyDbClient
 
 class UserServiceTest(unittest.TestCase):
 
-    async def is_user_added_if_all_parameters_are_correct(self):
+    def is_user_added_if_all_parameters_are_correct(self):
         config = PyhoconConfigLoader("config.conf").load_config()
 
         if config is None:
@@ -17,9 +17,9 @@ class UserServiceTest(unittest.TestCase):
             raise ValueError("Database configuration not found in the configuration file.")
 
         db_client = SoflyDbClient(config.database)
-        await db_client.init_db_client()
+        db_client.init_db_client()
 
-        await db_client.user_service.create_user(UserDTO(
+        db_client.user_service.create_user(UserDTO(
             "jirkakral", "jirkakral@seznam.cz", "password123"
         ))
 
