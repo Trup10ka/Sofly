@@ -1,34 +1,45 @@
-import asyncio
-
 from loguru import logger
 
+from src.config import SoflyConfig
 from src.config.pyhocon_config_loader import PyhoconConfigLoader
 from src.db.db_client import SoflyDbClient
 from src.security import JWTService
 from src.sofly_server import SoflyServer
 
-
-async def main():
+def init_db() -> tuple[PyhoconConfigLoader | None, SoflyDbClient | None]:
+    """
+    Initialize the database client and return the config and db client.
+    """
     config = PyhoconConfigLoader("config.conf").load_config()
 
     if config == -1:
         logger.critical("Failed to load configuration file, exiting...")
-        return
+        return None, None
     elif config == 1:
         logger.info("Exiting program.")
-        return
+        return None, None
 
     db_client = SoflyDbClient(config.database)
-    if not await db_client.init_db_client():
-        return
+    if not db_client.init_db_client():
+        return None, None
 
-    jwt_service = JWTService(config.jwt_secret)
+    return config, db_client
+
+def main(sofly_config: SoflyConfig, sofly_db_client: SoflyDbClient):
+    jwt_service = JWTService(sofly_config.jwt_secret)
+
+    generated_template_token = jwt_service.generate_jwt(
+        {"username": "jirkakral", "password": "template_password"},
+    )
+
+    logger.debug(f"Generated template token: {generated_template_token}")
 
     server = (SoflyServer.builder()
-              .set_host(config.server.host)
-              .set_port(config.server.port)
+              .set_host(sofly_config.server.host)
+              .set_port(sofly_config.server.port)
               .set_jwt_service(jwt_service)
-              .set_db_client(db_client)
+              .set_db_client(sofly_db_client)
+              .set_debug(True)
               .build())
 
     if server is None:
@@ -39,4 +50,8 @@ async def main():
 
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    s_config, s_db_client = init_db()
+    if s_config is None or s_db_client is None:
+        logger.critical("Failed to initialize database client, exiting...")
+        exit(1)
+    main(s_config, s_db_client)
