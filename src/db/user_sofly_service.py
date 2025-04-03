@@ -1,3 +1,6 @@
+from loguru import logger
+from pymysql import IntegrityError
+
 import src.db.db_client as db_c
 
 from src.data import User, UserDTO
@@ -13,12 +16,18 @@ class UserSoflyService(UserService):
         super().__init__(db_client)
 
     async def create_user(self, user_data: UserDTO) -> bool:
-        result = await self.db_client.execute(
-            "INSERT INTO users (username, email, password_hash) VALUES (%s, %s, %s)",
-            user_data.username, user_data.email, user_data.password_hash
-        )
-
-        return result.rowcount == 1
+        try:
+            result = await self.db_client.execute(
+                "INSERT INTO users (username, email, password_hash) VALUES (%s, %s, %s)",
+                user_data.username, user_data.email, user_data.password_hash
+            )
+            return result == 1
+        except IntegrityError as e:
+            logger.error(f"IntegrityError: {e}")
+            return False
+        except Exception as e:
+            logger.error(f"Exception: {e}")
+            return False
 
     async def get_user_by_id(self, user_id: int) -> User | None:
         result = await self.db_client.fetch(
