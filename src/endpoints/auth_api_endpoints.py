@@ -16,7 +16,7 @@ def init_auth_endpoints(blueprint: Blueprint, user_service: UserService, jwt_ser
     """
 
     @blueprint.route('/login', methods=['POST'])
-    def login():
+    async def login():
         data: dict = request.get_json()
 
         if 'username' not in data or 'password' not in data:
@@ -28,7 +28,7 @@ def init_auth_endpoints(blueprint: Blueprint, user_service: UserService, jwt_ser
         if not username or not password:
             return { "error_message": "Username and password cannot be empty" }, 432
 
-        user = user_service.get_user_by_username(username=username)
+        user = await user_service.get_user_by_username(username=username)
         if user is None:
             return { "error_message": "User not found" }, 404
         if not verify_password(password, user.password_hash):
@@ -44,7 +44,7 @@ def init_auth_endpoints(blueprint: Blueprint, user_service: UserService, jwt_ser
         return token, 200
 
     @blueprint.route('/register', methods=['POST'])
-    def register():
+    async def register():
         data: dict = request.get_json()
 
         if 'username' not in data or 'password' not in data or 'email' not in data:
@@ -57,15 +57,15 @@ def init_auth_endpoints(blueprint: Blueprint, user_service: UserService, jwt_ser
         if not username or not password or not email:
             return { "error_message": "Username, password and email cannot be empty" }, 432
 
-        if user_service.get_user_by_username(username=username) is not None:
+        if await user_service.get_user_by_username(username=username) is not None:
             return { "error_message": "User already exists" }, 409
 
-        if user_service.get_user_by_email(email=email) is not None:
+        if await user_service.get_user_by_email(email=email) is not None:
             return { "error_message": "Email already exists" }, 409
 
         hashed_password = encrypt_password_sha256(password)
 
-        is_created = user_service.create_user(UserDTO(username=username, password_hash=hashed_password, email=email))
+        is_created = await user_service.create_user(UserDTO(username=username, password_hash=hashed_password, email=email))
 
         if not is_created:
             return { "error_message": "User creation failed" }, 500
