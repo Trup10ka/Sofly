@@ -1,8 +1,8 @@
 from typing import Literal
 
-class InsuranceDTO:
+class Insurance:
 
-    def __init__(self, db_id: int, user_id: int, insurance_id: int, insurance_type: str, cost_per_month: float,
+    def __init__(self, db_id: int, user_id: int, insurance_id: str, insurance_type: str, cost_per_month: float,
                  status: Literal['active', 'inactive', 'pending'],
                  start_date: str = None, end_date: str = None):
         self.db_id = db_id
