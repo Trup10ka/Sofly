@@ -1,7 +1,7 @@
 from flask import Blueprint, send_from_directory
 
 from src.db.user_abc_service import UserService
-from src.endpoints.login_api_endpoints import init_auth_endpoints
+from src.endpoints.auth_api_endpoints import init_auth_endpoints
 from src.security import JWTService
 
 
