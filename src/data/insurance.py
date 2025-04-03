@@ -19,3 +19,15 @@ class Insurance:
                 f"insurance_id={self.insurance_id}, insurance_type={self.insurance_type}, "
                 f"cost_per_month={self.cost_per_month}, status={self.status}, "
                 f"start_date={self.start_date}, end_date={self.end_date})")
+
+    def to_dict(self):
+        return {
+            "db_id": self.db_id,
+            "user_id": self.user_id,
+            "insurance_id": self.insurance_id,
+            "insurance_type": self.insurance_type,
+            "cost_per_month": self.cost_per_month,
+            "status": self.status,
+            "start_date": self.start_date,
+            "end_date": self.end_date
+        }
