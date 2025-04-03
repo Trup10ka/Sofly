@@ -36,7 +36,6 @@ def init_auth_endpoints(blueprint: Blueprint, user_service: UserService, jwt_ser
 
         payload = {
             "username": username,
-            "password": password
         }
 
         token = jwt_service.generate_jwt(payload)
@@ -72,7 +71,6 @@ def init_auth_endpoints(blueprint: Blueprint, user_service: UserService, jwt_ser
 
         payload = {
             "username": username,
-            "password": password
         }
 
         token = jwt_service.generate_jwt(payload)
