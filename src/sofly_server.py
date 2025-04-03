@@ -52,6 +52,7 @@ class SoflyServer:
         logger.info(f"Creating SoflyServer instance with static: {static_folder_path}, templates: {template_folder}")
         self.flask_app = Flask(__name__, static_folder=static_folder_path, template_folder=template_folder)
 
+        self.flask_app.debug = is_debug
         self.host = host
         self.port = port
         self.is_debug = is_debug
