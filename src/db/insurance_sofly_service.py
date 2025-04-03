@@ -18,6 +18,8 @@ def return_all_insurances(result) -> list[Insurance]:
             end_date=insurance['end_date']
         ))
 
+    return insurances
+
 class InsuranceSoflyService(InsuranceService):
 
     def __init__(self, db_client: 'db_c.SoflyDbClient'):
