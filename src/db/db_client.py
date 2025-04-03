@@ -3,6 +3,7 @@ from loguru import logger
 
 from src.config import DatabaseConfig
 from src.db.user_sofly_service import UserSoflyService
+from src.db.user_abc_service import UserService
 
 class SoflyDbClient:
     """
@@ -13,11 +14,11 @@ class SoflyDbClient:
         Initialize the database client with a connection pool.
 
         Args:
-            config (SoflyConfig.DatabaseConfig): The database configuration object.
+            :param config: (SoflyConfig.DatabaseConfig): The database configuration object.
         """
         self.config = config
         self.pool = None
-        self.user_service = None
+        self.user_service: UserService | None = None
 
     async def init_db_client(self) -> bool:
         """
@@ -61,12 +62,17 @@ class SoflyDbClient:
     async def fetch(self, query: str, *args):
         """Execute a query and return the results."""
         async with self.pool.acquire() as conn:
-            return await conn.fetch(query, *args)
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
+                await cursor.execute(query, args)
+                return await cursor.fetchall()
 
-    async def execute(self, query: str, *args):
+    async def execute(self, query: str, *args) -> int:
         """Execute a query without returning results."""
         async with self.pool.acquire() as conn:
-            return await conn.execute(query, *args)
+            async with conn.cursor() as cursor:
+                await cursor.execute(query, args)
+                await conn.commit()
+                return cursor.rowcount
 
     async def close(self):
         """Close the database connection pool."""
