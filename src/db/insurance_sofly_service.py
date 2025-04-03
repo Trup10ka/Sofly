@@ -25,21 +25,21 @@ class InsuranceSoflyService(InsuranceService):
     def __init__(self, db_client: 'db_c.SoflyDbClient'):
         super().__init__(db_client)
 
-    async def create_insurance(self, insurance_data: InsuranceDTO) -> Insurance | None:
+    async def create_insurance(self, insurance_data: InsuranceDTO) -> bool:
         type_of_insurance_id = await self.db_client.fetch(
             "SELECT id FROM type_of_insurance WHERE name = $s",
             insurance_data.insurance_type
         )
 
         if not type_of_insurance_id:
-            return None
+            return False
 
         user_id = await self.db_client.fetch(
             "SELECT id FROM users WHERE username = %s",
             insurance_data.for_username
         )
         if not user_id:
-            return None
+            return False
 
         result = await self.db_client.execute(
             "INSERT INTO insurance (user_id, type_of_insurance, cost_per_month, status, start_date, end_date) "
@@ -52,17 +52,7 @@ class InsuranceSoflyService(InsuranceService):
             insurance_data.end_date
         )
 
-        if result.rowcount == 1:
-            return Insurance(
-                db_id=result.lastrowid,
-                insurance_id=result[0]['sofly_uuid'],
-                user_id=user_id,
-                insurance_type=type_of_insurance_id,
-                cost_per_month=insurance_data.cost_per_month,
-                status=insurance_data.status,
-                start_date=insurance_data.start_date,
-                end_date=insurance_data.end_date
-            )
+        return result == 1
 
 
     async def get_insurance_by_id(self, insurance_id: str) -> Insurance | None:
