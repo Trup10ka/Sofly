@@ -10,7 +10,7 @@ def init_endpoints(app: 'sofly.SoflyServer'):
 
     init_api_endpoints(api_endpoint, app.jwt_service, app.db_client)
 
-    init_html_endpoints(app.flask_app)
+    init_html_endpoints(app.flask_app, app.jwt_service)
 
     register_all_blueprints(app.flask_app, api_endpoint)
 
