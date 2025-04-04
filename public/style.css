@@ -115,3 +115,100 @@ form h2 {
   font-weight: normal;
   font-style: normal;
 }
+
+/* Dashboard container to hold the two columns */
+.dashboard-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 820px; /* 400px * 2 + 20px gap */
+    margin: 0 auto;
+}
+
+/* Styles for both the insurance list and form containers */
+
+.insurance-list {
+    overflow-y: auto;
+    max-height: 80vh;
+}
+
+
+.insurance-list,
+.insurance-form {
+    background: #56328E;
+    padding: 20px;
+    border-radius: 25px;
+    box-shadow: 0 1px 10px rgba(158, 97, 246, 0.95);
+    width: 400px;
+    text-align: center;
+}
+
+/* Each item in the insurance list */
+.insurance-item {
+    background-color: #B689DC;
+    color: #53308B;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+/* Optional: Style specific parts of insurance items */
+.insurance-name {
+    font-weight: bold;
+}
+
+.insurance-uuid {
+    font-size: 1rem; /* Slightly smaller than the default 1.2rem */
+}
+
+/* Form labels */
+.insurance-form label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+    color: #EEE1F2; /* From global form label */
+    font-weight: bold; /* From global form label */
+}
+
+/* Date input styling */
+.insurance-form input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #53308B;
+    background-color: #B689DC;
+    border-radius: 20px;
+    color: #53308B;
+}
+
+.insurance-form input[type="date"]:focus {
+    outline: 2px solid #EDE1F2; /* Matches .login-form input:focus */
+}
+
+/* Fieldset for radio buttons */
+.insurance-form fieldset {
+    border: none;
+    margin-bottom: 15px;
+}
+
+.insurance-form legend {
+    color: #EDE1F2; /* Matches h2 */
+    font-weight: bold;
+}
+
+/* Create Insurance button */
+.insurance-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #EDE1F2;
+    border: none;
+    color: #53308B;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.insurance-form button:hover {
+    background-color: #edd8f6; /* Matches .login-form button:hover */
+}
