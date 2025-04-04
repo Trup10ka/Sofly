@@ -10,4 +10,6 @@ crawler/links-gathered-beliani.txt
 crawler/links-gathered-veneti.txt
 crawler/sofa-set.csv
 
+llm/.export
+
 __pycache__/
