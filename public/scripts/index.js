@@ -25,9 +25,13 @@ async function login() {
         )
     });
 
-    if (response.ok) {
-        window.location.href = '/dashboard';
-    } else {
-        alert('Login failed');
+    if (response.ok)
+    {
+        window.location.href = '/dashboard'
+    }
+    else
+    {
+        const data = await response.json()
+        alert(data.error_message)
     }
 }
