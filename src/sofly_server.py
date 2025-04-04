@@ -1,4 +1,7 @@
 import os
+
+from xgboost import XGBRegressor
+
 import src.sofly_endpoints as sofly_endpoints
 
 from flask import Flask
@@ -43,6 +46,7 @@ class SoflyServer:
                     host: str,
                     jwt_service: JWTService,
                     db_client: SoflyDbClient,
+                    ai_model: XGBRegressor,
                     port: int = 5000,
                     static_folder_path: str = os.path.join(os.getcwd(), 'public'),
                     template_folder: str = os.path.join(os.getcwd(),'templates'),
@@ -59,6 +63,7 @@ class SoflyServer:
         self.should_create_public_dir = should_create_public_dir
         self.jwt_service = jwt_service
         self.db_client = db_client
+        self.ai_model = ai_model
 
         logger.success("Created SoflyServer instance")
 
@@ -88,6 +93,7 @@ class SoflyServerBuilder:
     def __init__(self):
         self._static_folder = os.path.join(os.getcwd(), 'public')
         self._template_folder = 'templates'
+        self.ai_model = None
         self._db_client = None
         self._jwt_service = None
         self._is_debug = True
@@ -127,6 +133,10 @@ class SoflyServerBuilder:
         self._jwt_service = jwt_service
         return self
 
+    def set_ai_model(self, ai_model: XGBRegressor):
+        self.ai_model = ai_model
+        return self
+
     def build(self) -> SoflyServer | None:
 
         if self._host is None:
@@ -140,9 +150,14 @@ class SoflyServerBuilder:
             logger.critical("You must provide a JWT service - jwt_service not provided")
             return None
 
+        if self.ai_model is None:
+            logger.critical("You must provide an AI model - ai_model not provided")
+            return None
+
         return SoflyServer(
             host=self._host,
             port=self._port,
+            ai_model=self.ai_model,
             jwt_service=self._jwt_service,
             db_client=self._db_client,
             static_folder_path=self._static_folder,

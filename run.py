@@ -1,4 +1,7 @@
+import pickle as pkl
+
 from loguru import logger
+from xgboost import XGBRegressor
 
 from src.config import SoflyConfig
 from src.config.pyhocon_config_loader import PyhoconConfigLoader
@@ -25,7 +28,18 @@ def init_db() -> tuple[PyhoconConfigLoader | None, SoflyDbClient | None]:
 
     return config, db_client
 
+def load_ai(file_name: str) -> XGBRegressor:
+    try:
+        with open(f".models/{file_name}", "rb") as model_file:
+            return pkl.load(model_file)
+    except FileNotFoundError:
+        logger.error("Model file not found. Please train the model first and export it.")
+        exit(1)
+
 def main(sofly_config: SoflyConfig, sofly_db_client: SoflyDbClient):
+
+    ai_model = load_ai('x_g_b_regressor.llm.pkl')
+
     jwt_service = JWTService(sofly_config.jwt_secret)
 
     generated_template_token = jwt_service.generate_jwt(
@@ -40,6 +54,7 @@ def main(sofly_config: SoflyConfig, sofly_db_client: SoflyDbClient):
               .set_jwt_service(jwt_service)
               .set_db_client(sofly_db_client)
               .set_debug(True)
+              .set_ai_model(ai_model)
               .build())
 
     if server is None:
