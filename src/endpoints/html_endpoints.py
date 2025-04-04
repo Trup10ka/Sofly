@@ -48,9 +48,11 @@ def is_authenticated(jwt_service: JWTService) -> bool:
     :param jwt_service:
     :return: True if the user is authenticated, False otherwise.
     """
-    token = request.headers.get('SOFLY_TOKEN')
+    token = request.cookies.get('SOFLY_TOKEN')
+    logger.debug(token)
     try:
         data, status_code = jwt_service.verify_jwt(token)
+        logger.debug(data)
         return status_code == 200
     except Exception as e:
         logger.error(f"Error verifying token: {e}")
