@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory, request
+from flask import Flask, send_from_directory, request, redirect
 from loguru import logger
 
 from src.security import JWTService
@@ -21,7 +21,7 @@ def init_html_endpoints(app: Flask, jwt_service: JWTService):
     @app.route('/dashboard')
     def serve_sofas():
         if not is_authenticated(jwt_service):
-            return {"error_message": "Unauthorized"}, 401
+            return redirect("/", code=302)
 
         logger.info("Request to '/dashboard' from origin: ")
         return send_from_directory(HTML_DIR, 'dashboard.html')
@@ -29,7 +29,7 @@ def init_html_endpoints(app: Flask, jwt_service: JWTService):
     @app.route('/insurance')
     def serve_tables():
         if not is_authenticated(jwt_service):
-            return {"error_message": "Unauthorized"}, 401
+            return redirect("/", code=302)
 
         logger.info("Request to '/insured-event' from origin: ")
         return send_from_directory(HTML_DIR, 'insurance.html')
@@ -37,7 +37,7 @@ def init_html_endpoints(app: Flask, jwt_service: JWTService):
     @app.route('/insured-event')
     def serve_insured_event():
         if not is_authenticated(jwt_service):
-            return {"error_message": "Unauthorized"}, 401
+            return redirect("/", code=302)
 
         logger.info("Request to '/insured-event' from origin: ")
         return send_from_directory(HTML_DIR, 'insured-event.html')
