@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 
 from src.data import UserDTO
 from src.db import UserService
@@ -40,7 +40,11 @@ def init_auth_endpoints(blueprint: Blueprint, user_service: UserService, jwt_ser
 
         token = jwt_service.generate_jwt(payload)
 
-        return token, 200
+        response = jsonify({"SOFLY_TOKEN": token})
+
+        response.set_cookie('SOFLY_TOKEN', token, httponly=True, secure=True)
+
+        return response, 200
 
     @blueprint.route('/register', methods=['POST'])
     def register():
@@ -75,4 +79,8 @@ def init_auth_endpoints(blueprint: Blueprint, user_service: UserService, jwt_ser
 
         token = jwt_service.generate_jwt(payload)
 
-        return token, 200
+        response = jsonify({"SOFLY_TOKEN": token})
+
+        response.set_cookie('SOFLY_TOKEN', token, httponly=True, secure=True)
+
+        return response, 200
