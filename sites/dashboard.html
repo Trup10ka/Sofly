@@ -11,6 +11,41 @@
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
 </head>
 <body>
+<img src="public/img/sofly_logo.png" alt="Background" class="corner-logo">
+<div class="dashboard-container comfortaa-normal">
+    <div class="insurance-list">
+        <h2 style="margin-bottom: 15px">Existing Insurances</h2>
 
+    </div>
+
+    <div class="insurance-form">
+        <h2 style="margin-bottom: 15px">Create New Insurance</h2>
+        <form id="insurance-form">
+            <fieldset>
+                <div id="plan_options" style="margin-left: 20px;">
+                    <label class="radio-label">
+                        <input class="radio-label-input" type="radio" name="plan" value="basic" required>
+                        Basic plan
+                    </label>
+                    <br>
+                    <label class="radio-label">
+                        <input class="radio-label-input" type="radio" name="plan" value="advanced">
+                        Advanced plan
+                    </label>
+                    <br>
+                    <label class="radio-label">
+                        <input class="radio-label-input" type="radio" name="plan" value="full">
+                        Full plan
+                    </label>
+                </div>
+            </fieldset>
+            <label for="end_date">End Date (optional):</label>
+            <input type="date" id="end_date" name="end_date">
+            <br>
+            <button id="create-insurance-button" type="submit">Create Insurance</button>
+        </form>
+    </div>
+</div>
+<script src="public/scripts/dashboard.js"></script>
 </body>
 </html>
