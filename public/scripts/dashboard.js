@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-createInsuranceList(fetchInsurances())
+createInsuranceList()
 
 async function fetchInsurances()
 {
@@ -25,7 +25,7 @@ async function fetchInsurances()
         {
             alert(data.error)
         }
-        return await response.json()
+        return await data
     }
     catch (error)
     {
@@ -34,8 +34,9 @@ async function fetchInsurances()
     }
 }
 
-function createInsuranceList(insurances)
+async function createInsuranceList()
 {
+    const insurances = await fetchInsurances()
     // Select the dashboard container where the insurance list will be appended
     const dashboardContainer = document.querySelector('.dashboard-container')
 
@@ -64,8 +65,17 @@ function createInsuranceList(insurances)
         existingItems.forEach(item => item.remove())
     }
 
+    if (insurances.error)
+    {
+        const errorP = document.createElement('p')
+        errorP.className = 'insurance-error'
+        errorP.textContent = insurances.error
+        insuranceList.appendChild(errorP)
+        return
+    }
+
     insurances.forEach(insurance => {
-        const itemDiv = document.createElement('div')
+        const itemDiv = document.createElement('div')   
         itemDiv.className = 'insurance-item'
 
         const nameP = document.createElement('p')

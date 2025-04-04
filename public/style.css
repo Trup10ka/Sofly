@@ -210,5 +210,12 @@ form h2 {
 }
 
 .insurance-form button:hover {
-    background-color: #edd8f6; /* Matches .login-form button:hover */
+    background-color: #edd8f6;
+}
+
+.insurance-error {
+    color: #EDE1F2;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    font-style: italic;
 }
