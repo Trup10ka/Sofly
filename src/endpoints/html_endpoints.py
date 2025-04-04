@@ -25,3 +25,8 @@ def init_html_endpoints(app: Flask):
     def serve_insured_event():
         logger.info("Request to '/insured-event' from origin: ")
         return send_from_directory(HTML_DIR, 'insured-event.html')
+
+    @app.route('/register')
+    def server_register():
+        logger.info("Request to '/register' from origin: ")
+        return send_from_directory(HTML_DIR, 'register.html')
