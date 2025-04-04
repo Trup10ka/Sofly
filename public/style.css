@@ -218,3 +218,21 @@ form h2 {
     font-size: 0.9rem;
     font-style: italic;
 }
+
+.report-event-button {
+    margin-top: 35px;
+    margin-bottom: 35px;
+    padding: 10px 25px;
+    background-color: #731717;
+    border: none;
+    color: #EDE1F2;
+    border-radius: 20px;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+    text-decoration: none;
+}
+
+.report-event-button:hover {
+    background-color: #a81b1b;
+}
