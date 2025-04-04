@@ -34,13 +34,13 @@ def init_html_endpoints(app: Flask, jwt_service: JWTService):
         logger.info("Request to '/insured-event' from origin: ")
         return send_from_directory(HTML_DIR, 'insurance.html')
 
-    @app.route('/insured-event')
+    @app.route('/report')
     def serve_insured_event():
         if not is_authenticated(jwt_service):
             return redirect("/", code=302)
 
         logger.info("Request to '/insured-event' from origin: ")
-        return send_from_directory(HTML_DIR, 'insured-event.html')
+        return send_from_directory(HTML_DIR, 'report-event.html')
 
 def is_authenticated(jwt_service: JWTService) -> bool:
     """
