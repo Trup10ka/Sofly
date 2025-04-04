@@ -27,9 +27,13 @@ async function register() {
         )
     });
 
-    if (response.ok) {
-        window.location.href = '/dashboard';
-    } else {
-        alert('Login failed');
+    if (response.ok)
+    {
+        window.location.href = '/dashboard'
+    }
+    else
+    {
+        const error = await response.json()
+        alert(error.error_message)
     }
 }
