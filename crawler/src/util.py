@@ -51,7 +51,7 @@ def get_soup_parser(link: str) -> BeautifulSoup:
     return BeautifulSoup(response.text, "html.parser")
 
 def append_parsed_data(all_sofas_parsed_links: list) -> None:
-    with open("furniture-dataset.csv", "a", newline='', encoding="utf-8") as csvfile:
+    with open("furniture_dataset.csv", "a", newline='', encoding="utf-8") as csvfile:
         fieldnames = all_sofas_parsed_links[0].keys() if all_sofas_parsed_links else []
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         if csvfile.tell() == 0:
