@@ -1,3 +1,5 @@
+import os
+
 import pymysql
 from loguru import logger
 from dbutils.pooled_db import PooledDB
@@ -31,9 +33,35 @@ class SoflyDbClient:
         """
         logger.info("Establishing connection with database...")
         self.connect()
+        self.execute_create_tables_statement()
         self.init_all_services()
         logger.info("Running post init check...")
         return self.post_init_check()
+
+    def execute_create_tables_statement(self):
+        """
+        Executes SQL statements from 'sql/tables.sql' to create tables if they don't exist.
+        """
+        file_path = "sql/tables.sql"
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                sql_script = f.read()
+
+            connection = self.pool.connection()
+            try:
+                with connection.cursor() as cursor:
+                    for statement in sql_script.split(";"):
+                        trimmed = statement.strip()
+                        if trimmed:
+                            cursor.execute(trimmed)
+                    connection.commit()
+                    logger.success("Executed table creation SQL script.")
+            finally:
+                connection.close()
+        except FileNotFoundError:
+            logger.error(f"SQL file not found: {file_path}")
+        except pymysql.MySQLError as e:
+            logger.error(f"Error executing table creation SQL: {e}")
 
     def init_all_services(self):
         """
