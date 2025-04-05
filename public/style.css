@@ -301,3 +301,13 @@ legend {
     margin-bottom: 10px;
     font-size: 1.6rem;
 }
+
+.result-box {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    border-radius: 25px;
+    padding: 30px;
+    background-color: #B689DC;
+    z-index: 1000;
+}

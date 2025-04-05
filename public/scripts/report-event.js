@@ -163,6 +163,7 @@ function validateDimensions(input)
 
 document.querySelector('.insurance-form').addEventListener('submit', async (e) =>
 {
+    document.querySelector('.result-box').remove()
     e.preventDefault()
     const jsonData = getFurnitureData()
 
@@ -183,7 +184,19 @@ document.querySelector('.insurance-form').addEventListener('submit', async (e) =
     if (response.ok)
     {
         const responseData = await response.json()
-        alert('Data submitted successfully: ' + responseData.result)
-        window.location.href = '/dashboard'
+        const messageBox = document.createElement('div')
+        messageBox.classList.add('result-box')
+
+        const result = document.createElement('h2')
+        result.style.color = 'rgb(66, 35, 115)'
+        result.textContent = `Your insurance will cover roughly: ${responseData.result.toFixed(2)}`
+
+        const deviation = document.createElement('p')
+        deviation.classList.add('insurance-uuid')
+        deviation.textContent = `Expect a deviation of approximately 3000`
+
+        messageBox.appendChild(result)
+        messageBox.appendChild(deviation)
+        document.body.appendChild(messageBox)
     }
 })
