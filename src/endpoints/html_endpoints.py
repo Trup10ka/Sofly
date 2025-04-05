@@ -1,6 +1,7 @@
 from flask import Flask, send_from_directory, request, redirect
 from loguru import logger
 
+from src.endpoints.util import is_authenticated
 from src.security import JWTService
 
 
@@ -41,17 +42,3 @@ def init_html_endpoints(app: Flask, jwt_service: JWTService):
 
         logger.info(f"Request to '/insured-event' from remote address: {request.remote_addr}")
         return send_from_directory(HTML_DIR, 'report-event.html')
-
-def is_authenticated(jwt_service: JWTService) -> bool:
-    """
-    Check if the user is authenticated.
-    :param jwt_service:
-    :return: True if the user is authenticated, False otherwise.
-    """
-    token = request.cookies.get('SOFLY_TOKEN')
-    try:
-        data, status_code = jwt_service.verify_jwt(token)
-        return status_code == 200
-    except Exception as e:
-        logger.error(f"Error verifying token: {e}")
-        return False
