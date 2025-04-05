@@ -130,8 +130,8 @@ function getFurnitureData()
             "is_leather": material === 'leather' ? 1 : 0,
             "is_fabric": material === 'fabric' ? 1 : 0,
             "is_none": material === 'none' ? 1 : 0,
-            "is_table": furnitureType === 'table' ? 1 : 0,
             "is_sofa": furnitureType === 'sofa' ? 1 : 0,
+            "is_table": furnitureType === 'table' ? 1 : 0,
             "is_chair": furnitureType === 'chair' ? 1 : 0,
         }
 
