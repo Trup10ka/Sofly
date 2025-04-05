@@ -223,9 +223,9 @@ form h2 {
     margin-top: 35px;
     margin-bottom: 35px;
     padding: 10px 25px;
-    background-color: #731717;
+    background-color: #731717 !important;
     border: none;
-    color: #EDE1F2;
+    color: #EDE1F2 !important;
     border-radius: 20px;
     cursor: pointer;
     text-align: center;
@@ -235,4 +235,37 @@ form h2 {
 
 .report-event-button:hover {
     background-color: #a81b1b;
+}
+
+/* Style for form inputs, selects, and textarea */
+.insurance-form input,
+.insurance-form select,
+.insurance-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #53308B;
+    background-color: #B689DC;
+    border-radius: 20px;
+    color: #53308B;
+}
+
+/* Focus styles for form elements */
+.insurance-form input:focus,
+.insurance-form select:focus,
+.insurance-form textarea:focus {
+    outline: 2px solid #EDE1F2;
+}
+
+/* Specific height for textarea */
+.insurance-form textarea {
+    height: 100px;
+}
+
+
+legend {
+    color: #EDE1F2;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 1.6rem;
 }
