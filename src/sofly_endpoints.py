@@ -8,7 +8,7 @@ from src.endpoints import init_html_endpoints, init_api_endpoints
 def init_endpoints(app: 'sofly.SoflyServer'):
     api_endpoint = Blueprint('api_endpoint', __name__, url_prefix='/api')
 
-    init_api_endpoints(api_endpoint, app.jwt_service, app.db_client)
+    init_api_endpoints(api_endpoint, app.jwt_service, app.db_client, app.ai_model)
 
     init_html_endpoints(app.flask_app, app.jwt_service)
 

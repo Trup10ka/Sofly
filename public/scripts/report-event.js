@@ -50,8 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 })
 
-async function fetchInsurances()
-{
+async function fetchInsurances() {
     try {
         const response = await fetch('/api/all-my-insurances')
         const insurances = await response.json()
@@ -112,19 +111,6 @@ function getFurnitureData() {
         // Get material from the select element
         const material = fieldset.querySelector(`select[name="furniture[][material]"]`).value
 
-        // Get insurance type (assuming a single insurance dropdown with id "insurance")
-        // This is a placeholder adjust based on your actual form structure
-        const insuranceSelect = document.getElementById('insurance')
-        const insuranceValue = insuranceSelect ? insuranceSelect.value : 'basic' // Default to 'basic' if not found
-
-        // Map insurance value to numeric type (0 = basic, 1 = advanced, 2 = full)
-        const insuranceMap = {
-            'basic': 0,
-            'advanced': 1,
-            'full': 2
-        }
-        const insuranceType = insuranceMap[insuranceValue] || 0 // Default to 0 if value not found
-
         // Create the furniture object with all required fields
         const furniture = {
             "dimensions": dimensionsSum,
@@ -134,15 +120,28 @@ function getFurnitureData() {
             "is_table": furnitureType === 'table' ? 1 : 0,
             "is_sofa": furnitureType === 'sofa' ? 1 : 0,
             "is_chair": furnitureType === 'chair' ? 1 : 0,
-            "insurance_type": insuranceType
         }
 
         // Add the furniture object to the array
         furnitureData.push(furniture)
     })
 
+    const insuranceSelect = document.getElementById('insurance')
+    const insuranceValue = insuranceSelect ? insuranceSelect.value : 'basic'
+
+    const insuranceMap = {
+        'basic': 0,
+        'advanced': 1,
+        'full': 2
+    }
+    const insuranceType = insuranceMap[insuranceValue] || 0
+    const result = {
+        "furniture_set": furnitureData,
+        "insurance_type": insuranceType
+    }
+
     // Return the array as a formatted JSON string
-    return JSON.stringify(furnitureData, null, 2)
+    return JSON.stringify(result, null, 2)
 }
 
 function validateDimensions(input) {
@@ -150,8 +149,28 @@ function validateDimensions(input) {
     return !(dimensions.length !== 3 || dimensions.some(part => isNaN(part)));
 }
 
-document.querySelector('.insurance-form').addEventListener('submit', (e) => {
+document.querySelector('.insurance-form').addEventListener('submit', async (e) => {
     e.preventDefault() // Prevent form submission for demonstration
     const jsonData = getFurnitureData()
-    console.log(jsonData) // Output the JSON to the console
+
+    if (!jsonData) {
+        alert('Please fill in all fields correctly.')
+        return
+    }
+
+    // Send JSON data to the server
+    const response = await fetch('/api/report-event', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: jsonData
+    })
+
+    if (response.ok)
+    {
+        const responseData = await response.json()
+        alert('Data submitted successfully: ' + responseData.result)
+        window.location.href = '/dashboard'
+    }
 })
