@@ -10,7 +10,60 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="comfortaa-normal">
+<form class="insurance-form">
+    <h2 style="margin-bottom: 15px">Report an event</h2>
 
+    <!-- Incident Type Dropdown -->
+    <label for="incident-type">Incident Type:</label>
+    <select id="incident-type" name="incident-type">
+        <option value="fire">Fire</option>
+        <option value="flood">Flood</option>
+        <option value="home-pet">Home-Pet</option>
+    </select>
+
+    <!-- Short Description Textarea -->
+    <label for="description">Description:</label>
+    <textarea id="description" name="description"></textarea>
+
+    <!-- Furniture Details Wrapper -->
+    <div id="furniture-container">
+        <fieldset>
+            <legend>Furniture Details</legend>
+
+            <label for="size-0">Size (dimensions):</label>
+            <input type="text" id="size-0" name="furniture[][size]" placeholder="format: 10x20x30" required>
+
+            <label for="furniture-type-0">Furniture Type:</label>
+            <select id="furniture-type-0" name="furniture[][type]">
+                <option value="sofa">Sofa</option>
+                <option value="chair">Chair</option>
+                <option value="table">Table</option>
+            </select>
+
+            <label for="material-0">Material:</label>
+            <select id="material-0" name="furniture[][material]">
+                <option value="leather">Leather</option>
+                <option value="fabric">Fabric</option>
+                <option value="none">None</option>
+            </select>
+
+            <button type="button" class="remove-furniture">Remove</button>
+        </fieldset>
+    </div>
+    <button type="button" id="add-furniture">+ Add Another Furniture Item</button>
+
+    <!-- Insurance Selection Dropdown -->
+    <label style="margin-top: 25px" for="insurance">Select Insurance:</label>
+    <select id="insurance" name="insurance">
+        <option value="placeholder1">Insurance 1</option>
+        <option value="placeholder2">Insurance 2</option>
+        <option value="placeholder3">Insurance 3</option>
+    </select>
+
+    <!-- Submit Button -->
+    <button class="report-event-button" type="submit">Report Event</button>
+</form>
+<script src="public/scripts/report-event.js"></script>
 </body>
 </html>
