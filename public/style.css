@@ -256,31 +256,16 @@ form h2 {
     color: #53308B;
 }
 
-/* Focus styles for form elements */
-.insurance-form input:focus,
-.insurance-form select:focus,
-.insurance-form textarea:focus {
-    outline: 2px solid #EDE1F2;
-}
-
 /* Specific height for textarea */
 .insurance-form textarea {
     height: 100px;
 }
-
 
 legend {
     color: #EDE1F2;
     font-weight: bold;
     margin-bottom: 10px;
     font-size: 1.6rem;
-}
-
-/* Focus styles for form elements */
-.insurance-form input:focus,
-.insurance-form select:focus,
-.insurance-form textarea:focus {
-    outline: 2px solid #EDE1F2;
 }
 
 /* Specific height for textarea */
