@@ -159,16 +159,18 @@ form h2 {
 }
 
 .insurance-uuid {
-    font-size: 1rem; /* Slightly smaller than the default 1.2rem */
+    font-size: 1rem;
 }
 
 /* Form labels */
 .insurance-form label {
-    display: block;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
     text-align: left;
     margin-bottom: 5px;
-    color: #EEE1F2; /* From global form label */
-    font-weight: bold; /* From global form label */
+    color: #EEE1F2;
+    font-weight: bold;
 }
 
 /* Date input styling */
@@ -237,7 +239,6 @@ form h2 {
     background-color: #a81b1b;
 }
 
-/* Style for form inputs, selects, and textarea */
 .insurance-form input,
 .insurance-form select,
 .insurance-form textarea {
@@ -262,6 +263,32 @@ form h2 {
     height: 100px;
 }
 
+
+legend {
+    color: #EDE1F2;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 1.6rem;
+}
+
+/* Focus styles for form elements */
+.insurance-form input:focus,
+.insurance-form select:focus,
+.insurance-form textarea:focus {
+    outline: 2px solid #EDE1F2;
+}
+
+/* Specific height for textarea */
+.insurance-form textarea {
+    height: 100px;
+}
+
+.radio-label-input {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    width: 40% !important;
+}
 
 legend {
     color: #EDE1F2;
