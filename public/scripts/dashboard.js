@@ -30,7 +30,7 @@ createInsuranceButton.addEventListener('click', async function (event) {
             method: 'POST',
             body: JSON.stringify(
                 {
-                    plan
+                    insurance_type: plan
                 }
             ),
             headers: {
@@ -71,7 +71,6 @@ async function fetchInsurances() {
 
 async function createInsuranceList() {
     const insurances = await fetchInsurances()
-    // Select the dashboard container where the insurance list will be appended
     const dashboardContainer = document.querySelector('.dashboard-container')
 
     if (!dashboardContainer) {
@@ -107,15 +106,15 @@ async function createInsuranceList() {
         const itemDiv = document.createElement('div')
         itemDiv.className = 'insurance-item'
 
-        const nameP = document.createElement('p')
-        nameP.className = 'insurance-name'
-        nameP.textContent = insurance.name
+        const typeH2 = document.createElement('h2')
+        typeH2.textContent = insurance.insurance_type || 'Unknown'
+        typeH2.style.color = "#422373"
 
         const uuidP = document.createElement('p')
         uuidP.className = 'insurance-uuid'
-        uuidP.textContent = `UUID: ${insurance.uuid}`
+        uuidP.textContent = `UUID: ${insurance.insurance_id}`
 
-        itemDiv.appendChild(nameP)
+        itemDiv.appendChild(typeH2)
         itemDiv.appendChild(uuidP)
         insuranceList.appendChild(itemDiv)
     })
