@@ -1,26 +1,26 @@
 # Sofly Insurance Simulation 🛋️
 
-Sofly is a web application simulating an insurance company website. This platform allows users to interact with fictional insurance products, potentially specializing in or heavily featuring sofas.
+Sofly is a web application designed to simulate the operations of an insurance company, allowing users to interact with fictional insurance products. The project aims to demonstrate web development skills and the integration of machine learning into a web application.
 
-## Project Description
+## Features
 
-This repository contains the source code for the Sofly website, a demonstration project simulating the operations of an insurance company. The primary goal of this project might be to showcase web development skills, demonstrate the integration of machine learning into a web application, or simulate insurance quoting processes.
-
-A key feature of the Sofly platform is its use of a **Machine Learning model** to predict the value or risk associated with sofas based on their characteristics. This prediction likely influences the insurance quotes provided to users.
+- **Insurance Policy Management**: Create, view, and manage fictional insurance policies.
+- **Claims Processing**: Simulate the submission and processing of insurance claims.
+- **Machine Learning Integration**: Utilizes machine learning models to assess risk and predict claim outcomes.
 
 ### ML Model Parameters
 
 The underlying ML model considers the following parameters to estimate sofa value/risk:
 
-| Feature           | Description                                                 | Type (Example)       |
-|:------------------|:------------------------------------------------------------|:---------------------|
-| Length            | The overall length of the sofa (e.g., in cm)                | Numeric              |
-| Width             | The overall width (or depth) of the sofa (e.g., in cm)      | Numeric              |
-| Depth             | The seating depth of the sofa (e.g., in cm)                 | Numeric              |
-| Cover material    | The primary material of the upholstery                      | Categorical          |
-| Sit height        | The height from the floor to the seat cushion (e.g., in cm) | Numeric              |
-| Contains metal    | Whether the sofa frame or legs contain metal                | Boolean (True/False) |
-| Contains hardwood | Whether the sofa frame uses hardwood                        | Boolean (True/False) |
+| Feature    | Description                                      | Type (Example)   |
+|:-----------|:-------------------------------------------------|:-----------------|
+| Dimensions | The overall size of furniture                    | Numeric          |
+| Is sofa    | Whether the furniture is sofa                    | Boolean (0 or 1) |
+| Is chair   | Whether the furniture is a chair                 | Boolean (0 or 1) |
+| Is table   | Whether the furniture is a table                 | Boolean (0 or 1) |
+| Is leather | Whether the furniture is leather                 | Boolean (0 or 1) |
+| Is fabric  | Whether the furniture is fabric                  | Boolean (0 or 1) |
+| Is none    | Whether the furniture has uncategorized material | Boolean (0 or 1) |
 
 *Note: The website's input forms should ideally guide the user to provide data matching the format and units the model expects.*
 
@@ -85,3 +85,13 @@ Once dependencies are installed and the environment is configured, you can run t
 ```bash
   poetry run python -m run
 ```
+
+# License
+
+This project is licensed under the MIT License.
+See the [LICENSE](https://github.com/Trup10ka/Sofly/blob/main/LICENSE) file for details.
+
+# Disclaimer
+
+Sofly is a fictional application created for educational and demonstration purposes only. It is not intended for actual insurance operations or real-world use.
+
