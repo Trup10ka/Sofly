@@ -145,15 +145,11 @@ function getFurnitureData() {
     return JSON.stringify(furnitureData, null, 2)
 }
 
-// Function to validate dimensions format
 function validateDimensions(input) {
     const dimensions = input.split('x'); // Split the input by 'x'
-    // Check if there are exactly 3 parts and all are numbers
     return !(dimensions.length !== 3 || dimensions.some(part => isNaN(part)));
-   // Valid format
 }
 
-// Example usage: Attach to form submission
 document.querySelector('.insurance-form').addEventListener('submit', (e) => {
     e.preventDefault() // Prevent form submission for demonstration
     const jsonData = getFurnitureData()
