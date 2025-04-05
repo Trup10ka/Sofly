@@ -141,6 +141,7 @@ form h2 {
     box-shadow: 0 1px 10px rgba(158, 97, 246, 0.95);
     width: 550px;
     text-align: center;
+    max-height: 380px;
 }
 
 /* Each item in the insurance list */
@@ -237,6 +238,10 @@ form h2 {
 
 .report-event-button:hover {
     background-color: #a81b1b;
+}
+
+.report-event-form {
+    max-height: fit-content !important;
 }
 
 .insurance-form input,
