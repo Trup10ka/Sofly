@@ -1,4 +1,10 @@
 
+/*
+* ############################################################################
+* Code partly generated with GitHub Copilot and then modified by the developer.
+* #############################################################################
+ */
+
 registerButton = document.getElementById("register-button")
 
 registerButton.addEventListener("click", async function (event)
