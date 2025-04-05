@@ -2,9 +2,10 @@ from typing import Literal
 
 class InsuranceDTO:
 
-    def __init__(self, for_username: int, insurance_id: int, insurance_type: str, cost_per_month: float,
+    def __init__(self, for_username: str, insurance_type: str, cost_per_month: float,
                  status: Literal['active', 'inactive', 'pending'],
-                 start_date: str = None, end_date: str = None, ):
+                 insurance_id: int = None,
+                 start_date: str = None, end_date: str = None):
         self.for_username = for_username
         self.insurance_id = insurance_id
         self.insurance_type = insurance_type

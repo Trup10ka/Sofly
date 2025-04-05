@@ -120,11 +120,26 @@ class InsuranceSoflyService(InsuranceService):
 
     def get_all_insurances_by_user(self, username: str) -> list[Insurance]:
         result = self.db_client.fetch(
-            "SELECT * FROM insurance WHERE user_id = (SELECT id FROM users WHERE username = %s)",
+            "SELECT i.*, t.name as type_of_insurance_name FROM insurance i "
+            "JOIN type_of_insurance t ON i.type_of_insurance = t.id "
+            "WHERE i.user_id = (SELECT id FROM users WHERE username = %s)",
             username
         )
 
-        return return_all_insurances(result)
+        insurances = []
+        for insurance in result:
+            insurances.append(Insurance(
+                db_id=insurance['id'],
+                user_id=insurance['user_id'],
+                insurance_id=insurance['sofly_uuid'],
+                insurance_type=insurance['type_of_insurance_name'],
+                cost_per_month=insurance['cost_per_month'],
+                status=insurance['status'],
+                start_date=insurance['start_date'],
+                end_date=insurance['end_date']
+            ))
+
+        return insurances
 
     def get_all_insurances(self) -> list[Insurance]:
         result = self.db_client.fetch(
