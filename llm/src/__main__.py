@@ -21,7 +21,7 @@ def export_models(*models: list[object]):
         print(f"Model {model_name} saved successfully.")
 
 def main():
-    loaded_sofa_csv = pd.read_csv("llm/data/sofa-set.csv")
+    loaded_sofa_csv = pd.read_csv("llm/data/furniture_dataset.csv")
     remove_error_column_and_save(loaded_sofa_csv)
     print(f"Number of entries: {len(loaded_sofa_csv)} before dropping duplicates")
     loaded_sofa_csv.drop_duplicates(inplace=True)
