@@ -64,7 +64,7 @@ def init_auth_endpoints(blueprint: Blueprint, user_service: UserService, jwt_ser
             return { "error_message": "User already exists" }, 409
 
         if user_service.get_user_by_email(email=email) is not None:
-            return { "rror_message": "Email already exists" }, 409
+            return { "error_message": "Email already exists" }, 409
 
         hashed_password = encrypt_password_sha256(password)
 
