@@ -21,6 +21,8 @@ pyhocon = "^0.3.61"
 aiomysql = "^0.2.0"
 pyjwt = "^2.10.1"
 dbutils = "^3.1.0"
+coverage = "7.8.0"
+pytest = "^7.4.0"
 
 [build-system]
 requires = ["poetry-core"]
