@@ -27,9 +27,9 @@ class InsuranceSoflyService(InsuranceService):
 
     def create_insurance(self, insurance_data: InsuranceDTO) -> bool:
         type_of_insurance_id = self.db_client.fetch(
-            "SELECT id FROM type_of_insurance WHERE name = $s",
+            "SELECT id FROM type_of_insurance WHERE name = %s",
             insurance_data.insurance_type
-        )
+        )[0]['id']
 
         if not type_of_insurance_id:
             return False
@@ -37,7 +37,8 @@ class InsuranceSoflyService(InsuranceService):
         user_id = self.db_client.fetch(
             "SELECT id FROM users WHERE username = %s",
             insurance_data.for_username
-        )
+        )[0]['id']
+
         if not user_id:
             return False
 

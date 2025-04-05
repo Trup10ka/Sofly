@@ -1,8 +1,11 @@
 import asyncio
+from datetime import datetime
 
-from flask import Blueprint, request
+from flask import Blueprint, request, redirect
 
+from src.data import InsuranceDTO
 from src.db.insurance_sofly_service import InsuranceSoflyService
+from src.endpoints.util import is_authenticated
 from src.security import JWTService
 
 
@@ -10,15 +13,12 @@ def init_api_dashboard_endpoints(insurance_service: InsuranceSoflyService, bluep
 
     @blueprint.route('/all-my-insurances', methods=['GET'])
     def get_all_my_insurances():
+        if not is_authenticated(jwt_service):
+            return redirect("/", code=302)
+
         token_cookie = request.cookies.get('SOFLY_TOKEN')
 
-        if not token_cookie:
-            return {'error': 'Token not found in cookies'}, 401
-
         decoded_token, status_code = jwt_service.verify_jwt(token_cookie)
-
-        if status_code != 200:
-            return decoded_token, status_code
 
         user_all_insurances = insurance_service.get_all_insurances_by_user(decoded_token['username'])
 
@@ -30,16 +30,13 @@ def init_api_dashboard_endpoints(insurance_service: InsuranceSoflyService, bluep
 
 
     @blueprint.route('/all-my-insurances/<insurance_id>', methods=['GET'])
-    def et_insurance_by_id(insurance_id: str):
+    def get_insurance_by_id(insurance_id: str):
+        if not is_authenticated(jwt_service):
+            return redirect("/", code=302)
+
         token_cookie = request.cookies.get('SOFLY_TOKEN')
 
-        if not token_cookie:
-            return {'error': 'Token not found in cookies'}, 401
-
         decoded_token, status_code = jwt_service.verify_jwt(token_cookie)
-
-        if status_code != 200:
-            return decoded_token, status_code
 
         # TODO: WRONG
         user_insurance = insurance_service.get_insurance_by_id(decoded_token['insurance_id'])
@@ -48,3 +45,40 @@ def init_api_dashboard_endpoints(insurance_service: InsuranceSoflyService, bluep
             return {'error': 'Insurance not found'}, 404
 
         return user_insurance.to_dict(), 200
+
+    @blueprint.route('/create-insurance', methods=['POST'])
+    def create_insurance():
+        if not is_authenticated(jwt_service):
+            return redirect("/", code=302)
+
+        token_cookie = request.cookies.get('SOFLY_TOKEN')
+
+        decoded_token, status_code = jwt_service.verify_jwt(token_cookie)
+
+        insurance_data = request.json
+
+        if not insurance_data:
+            return {'error': 'No data provided'}, 400
+
+        insurance_data['user_id'] = decoded_token['username']
+
+        cost = { "basic": 1450.00, "advanced": 3450.00, "full": 6200.00 }.get(insurance_data['insurance_type'], 0)
+
+        if cost == 0:
+            return {'error': 'Invalid insurance type'}, 400
+
+        insurance_dto = InsuranceDTO(
+            for_username=decoded_token['username'],
+            insurance_type=insurance_data['insurance_type'],
+            start_date=datetime.now().strftime('%Y-%m-%d'),
+            cost_per_month=cost,
+            end_date=insurance_data.get('end_date', None),
+            status="pending",
+        )
+
+        new_insurance = insurance_service.create_insurance(insurance_dto)
+
+        if not new_insurance:
+            return {'error': 'Insurance creation failed'}, 500
+
+        return "Successful", 201

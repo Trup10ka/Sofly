@@ -19,7 +19,7 @@ createInsuranceButton.addEventListener('click', async function (event) {
     event.preventDefault()
     const form = document.getElementById('insurance-form')
     const formData = new FormData(form)
-    const plan = formData.get('plan')
+    const plan = formData.get('plan').split(' ')[0].toLowerCase()
 
     if (!validateForm()) {
         return
