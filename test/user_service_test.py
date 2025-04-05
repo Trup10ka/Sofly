@@ -1,4 +1,3 @@
-import asyncio
 import unittest
 
 from src.config.pyhocon_config_loader import PyhoconConfigLoader
@@ -8,8 +7,8 @@ from src.db import SoflyDbClient
 
 class UserServiceTest(unittest.TestCase):
 
-    def is_user_added_if_all_parameters_are_correct(self):
-        config = PyhoconConfigLoader("config.conf").load_config()
+    def test_is_user_added_if_all_parameters_are_correct(self):
+        config = PyhoconConfigLoader("../config.conf").load_config()
 
         if config is None:
             raise ValueError("Configuration file not found or invalid.")
@@ -26,11 +25,6 @@ class UserServiceTest(unittest.TestCase):
         user = db_client.user_service.get_user_by_username("jirkakral")
 
         self.assertIsNotNone(user)
-
-    def test_is_user_added_if_all_parameters_are_correct(self):
-        asyncio.run(self.is_user_added_if_all_parameters_are_correct())
-
-
 
 
 if __name__ == '__main__':
