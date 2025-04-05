@@ -1,4 +1,3 @@
-
 loginButton = document.getElementById("login-button")
 
 loginButton.addEventListener("click", async function (event)
@@ -8,7 +7,8 @@ loginButton.addEventListener("click", async function (event)
     }
 )
 
-async function login() {
+async function login()
+{
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 

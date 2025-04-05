@@ -1,31 +1,40 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const typeRadios = document.querySelectorAll('input[name="insurance_type"]');
-    const planOptions = document.getElementById('plan_options');
+document.addEventListener('DOMContentLoaded', function ()
+{
+    const typeRadios = document.querySelectorAll('input[name="insurance_type"]')
+    const planOptions = document.getElementById('plan_options')
 
-    typeRadios.forEach(radio => {
-        radio.addEventListener('change', function () {
-            if (this.value === 'plan') {
-                planOptions.style.display = 'block';
-            } else {
-                planOptions.style.display = 'none';
+    typeRadios.forEach(radio =>
+    {
+        radio.addEventListener('change', function ()
+        {
+            if (this.value === 'plan')
+            {
+                planOptions.style.display = 'block'
             }
-        });
-    });
-});
+            else
+            {
+                planOptions.style.display = 'none'
+            }
+        })
+    })
+})
 
 const createInsuranceButton = document.getElementById('create-insurance-button')
 
-createInsuranceButton.addEventListener('click', async function (event) {
+createInsuranceButton.addEventListener('click', async function (event)
+{
     event.preventDefault()
     const form = document.getElementById('insurance-form')
     const formData = new FormData(form)
     const plan = formData.get('plan').split(' ')[0].toLowerCase()
 
-    if (!validateForm()) {
+    if (!validateForm())
+    {
         return
     }
 
-    try {
+    try
+    {
         const response = await fetch('/api/create-insurance', {
             method: 'POST',
             body: JSON.stringify(
@@ -40,14 +49,19 @@ createInsuranceButton.addEventListener('click', async function (event) {
 
         const data = await response.json()
 
-        if (!response.ok) {
+        if (!response.ok)
+        {
             alert(data.error)
-        } else {
+        }
+        else
+        {
             alert('Insurance created successfully!')
             form.reset()
             createInsuranceList()
         }
-    } catch (error) {
+    }
+    catch (error)
+    {
         console.error('Error creating insurance:', error)
     }
 })
@@ -55,32 +69,40 @@ createInsuranceButton.addEventListener('click', async function (event) {
 
 createInsuranceList()
 
-async function fetchInsurances() {
-    try {
+async function fetchInsurances()
+{
+    try
+    {
         const response = await fetch('/api/all-my-insurances')
         const data = await response.json()
-        if (!response.ok) {
+        if (!response.ok)
+        {
             alert(data.error)
         }
         return await data
-    } catch (error) {
+    }
+    catch (error)
+    {
         console.error('Error fetching insurances:', error)
         return []
     }
 }
 
-async function createInsuranceList() {
+async function createInsuranceList()
+{
     const insurances = await fetchInsurances()
     const dashboardContainer = document.querySelector('.dashboard-container')
 
-    if (!dashboardContainer) {
+    if (!dashboardContainer)
+    {
         console.error('Dashboard container not found')
         return
     }
 
     let insuranceList = document.querySelector('.insurance-list')
 
-    if (!insuranceList) {
+    if (!insuranceList)
+    {
         insuranceList = document.createElement('div')
         insuranceList.className = 'insurance-list'
         dashboardContainer.appendChild(insuranceList)
@@ -89,12 +111,15 @@ async function createInsuranceList() {
         h2.textContent = 'Existing Insurances'
         h2.style.marginBottom = '15px'
         insuranceList.appendChild(h2)
-    } else {
+    }
+    else
+    {
         const existingItems = insuranceList.querySelectorAll('.insurance-item')
         existingItems.forEach(item => item.remove())
     }
 
-    if (insurances.error) {
+    if (insurances.error)
+    {
         const errorP = document.createElement('p')
         errorP.className = 'insurance-error'
         errorP.textContent = insurances.error
@@ -102,7 +127,8 @@ async function createInsuranceList() {
         return
     }
 
-    insurances.forEach(insurance => {
+    insurances.forEach(insurance =>
+    {
         const itemDiv = document.createElement('div')
         itemDiv.className = 'insurance-item'
 
@@ -120,20 +146,24 @@ async function createInsuranceList() {
     })
 }
 
-function validateForm() {
-    const radios = document.getElementsByName('plan');
-    let formValid = false;
+function validateForm()
+{
+    const radios = document.getElementsByName('plan')
+    let formValid = false
 
-    for (let i = 0; i < radios.length; i++) {
-        if (radios[i].checked) {
-            formValid = true;
-            break;
+    for (let i = 0; i < radios.length; i++)
+    {
+        if (radios[i].checked)
+        {
+            formValid = true
+            break
         }
     }
 
-    if (!formValid) {
-        alert('Please select at least one plan.');
+    if (!formValid)
+    {
+        alert('Please select at least one plan.')
     }
 
-    return formValid;
+    return formValid
 }

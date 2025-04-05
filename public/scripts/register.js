@@ -1,8 +1,7 @@
-
 /*
-* ############################################################################
-* Code partly generated with GitHub Copilot and then modified by the developer.
-* #############################################################################
+ * ############################################################################
+ * Code partly generated with GitHub Copilot and then modified by the developer.
+ * #############################################################################
  */
 
 registerButton = document.getElementById("register-button")
@@ -14,7 +13,8 @@ registerButton.addEventListener("click", async function (event)
     }
 )
 
-async function register() {
+async function register()
+{
     const username = document.getElementById("username").value
     const password = document.getElementById("password").value
     const email = document.getElementById("email").value
@@ -31,7 +31,7 @@ async function register() {
                 email: email
             }
         )
-    });
+    })
 
     if (response.ok)
     {
