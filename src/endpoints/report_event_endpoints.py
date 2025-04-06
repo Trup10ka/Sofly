@@ -1,3 +1,4 @@
+import numpy as np
 from flask import Blueprint, request
 
 from src.endpoints.util import is_authenticated
@@ -27,6 +28,7 @@ def init_api_report_event_endpoints(blueprint: Blueprint, jwt_service: JWTServic
             furniture_values = list(furniture.values())
             furniture_set_2d.append(furniture_values)
 
+        furniture_set_2d = np.array(furniture_set_2d)
         result = ai_model.predict(furniture_set_2d)
 
         result_sum = sum(float(x) for x in result)
