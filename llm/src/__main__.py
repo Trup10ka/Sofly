@@ -6,6 +6,7 @@ from pandas import DataFrame
 
 from llm.src.train.gradient_boosting_regressor import train_gradient_boosting_regressor_with_scaler
 from llm.src.train.linear_regression import train_linear_regression
+from llm.src.train.neural_network_regressor import train_neutral_network_regressor
 from llm.src.train.random_forest_regressor import train_random_forest_regressor_with_scaler
 from llm.src.train.xgb_regressor import train_xgb_regressor_with_scaler
 
@@ -31,8 +32,9 @@ def main():
     random_forest_model = train_random_forest_regressor_with_scaler(loaded_sofa_csv)
     xgb_model = train_xgb_regressor_with_scaler(loaded_sofa_csv)
     linear_regression_model = train_linear_regression(loaded_sofa_csv)
+    neural_network_model = train_neutral_network_regressor(loaded_sofa_csv)
 
-    export_models(gradient_boost_model, random_forest_model, xgb_model, linear_regression_model)
+    export_models(gradient_boost_model, random_forest_model, xgb_model, linear_regression_model, neural_network_model)
 
 if __name__ == "__main__":
     main()
