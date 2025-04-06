@@ -39,6 +39,16 @@ The underlying ML model considers the following parameters to estimate sofa valu
 * **Database:** MariaDB / MySQL
 * **Deployment:** Poetry, Python environment
 
+## Third-party libraries used in the project:
+* Flask: A lightweight WSGI web application framework.
+* BS4: Beautiful Soup for parsing HTML and XML documents.
+* Pandas: A powerful data manipulation and analysis library.
+* XGBoost: An optimized distributed gradient boosting library.
+* Loguru: A library for logging in Python.
+* Pyhocon: A library for handling HTTP requests.
+* PyJWT: A library for encoding and decoding JSON Web Tokens.
+* Coverage: A tool for measuring code coverage of Python programs.
+
 ## Getting Started
 
 These instructions will help you set up and run the Sofly website on your local machine for development and testing.
