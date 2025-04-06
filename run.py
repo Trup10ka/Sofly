@@ -1,3 +1,4 @@
+import datetime
 import pickle as pkl
 import sys
 from loguru import logger
@@ -63,6 +64,10 @@ def main(ai_model, sofly_config: SoflyConfig, sofly_db_client: SoflyDbClient):
 
 
 if __name__ == '__main__':
+
+    log_format = "<green>{time:YYYY-MM-DD HH:mm:ss.SSS zz}</green> | <level>{level: <8}</level> | <yellow>Line {line: >4} ({file}):</yellow> <b>{message}</b>"
+    logger.add(f"sofly-{datetime.datetime.now().strftime('%Y-%m-%d')}.log", level="INFO", format=log_format, colorize=False, backtrace=True, diagnose=True)
+
     if len(sys.argv) < 2:
         logger.critical("No argument provided for AI model, exiting...")
         exit(1)
