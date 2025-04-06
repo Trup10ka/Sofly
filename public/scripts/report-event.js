@@ -161,9 +161,8 @@ function validateDimensions(input)
     return !(dimensions.length !== 3 || dimensions.some(part => isNaN(part)))
 }
 
-document.querySelector('.insurance-form').addEventListener('submit', async (e) =>
+document.querySelector('.report-event-button').addEventListener('click', async (e) =>
 {
-    document.querySelector('.result-box').remove()
     e.preventDefault()
     const jsonData = getFurnitureData()
 
@@ -181,9 +180,9 @@ document.querySelector('.insurance-form').addEventListener('submit', async (e) =
         body: jsonData
     })
 
+    const responseData = await response.json()
     if (response.ok)
     {
-        const responseData = await response.json()
         const messageBox = document.createElement('div')
         messageBox.classList.add('result-box')
 
@@ -198,5 +197,9 @@ document.querySelector('.insurance-form').addEventListener('submit', async (e) =
         messageBox.appendChild(result)
         messageBox.appendChild(deviation)
         document.body.appendChild(messageBox)
+    }
+    else
+    {
+        alert("Something went wrong. Please try again.: " + responseData.error)
     }
 })
