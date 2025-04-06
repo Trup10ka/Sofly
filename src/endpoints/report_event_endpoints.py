@@ -15,9 +15,7 @@ def init_api_report_event_endpoints(blueprint: Blueprint, jwt_service: JWTServic
         event_data = request.json
 
         furniture_set: list[dict] = event_data.get('furniture_set')
-        print(furniture_set)
         insurance_type: str = event_data.get('insurance_type')
-        print(insurance_type)
 
         if not event_data or not furniture_set or not insurance_type :
             return {'error': 'Invalid data'}, 400
@@ -32,5 +30,12 @@ def init_api_report_event_endpoints(blueprint: Blueprint, jwt_service: JWTServic
         result = ai_model.predict(furniture_set_2d)
 
         result_sum = sum(float(x) for x in result)
+
+        if insurance_type == 'basic':
+            result_sum *= 3000 * 0.4
+        elif insurance_type == 'advanced':
+            result_sum *= 3000 * 0.8
+        elif insurance_type == 'full':
+            result_sum *= 3000 * 1.4
 
         return {'result': result_sum}, 200
