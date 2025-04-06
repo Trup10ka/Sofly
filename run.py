@@ -69,7 +69,7 @@ if __name__ == '__main__':
     arg = sys.argv[1]
     logger.info(f"Argument received: {arg}")
 
-    loaded_model = load_ai(f'./models/{arg}.llm.pkl')
+    loaded_model = load_ai(f'{arg}.llm.pkl')
 
     s_config, s_db_client = init_db()
     if s_config is None or s_db_client is None:
