@@ -1,5 +1,5 @@
 import pickle as pkl
-
+import sys
 from loguru import logger
 from xgboost import XGBRegressor
 
@@ -9,7 +9,7 @@ from src.db.db_client import SoflyDbClient
 from src.security import JWTService
 from src.sofly_server import SoflyServer
 
-def init_db() -> tuple[PyhoconConfigLoader | None, SoflyDbClient | None]:
+def init_db() -> tuple[SoflyConfig | None, SoflyDbClient | None]:
     """
     Initialize the database client and return the config and db client.
     """
@@ -33,12 +33,10 @@ def load_ai(file_name: str) -> XGBRegressor:
         with open(f".models/{file_name}", "rb") as model_file:
             return pkl.load(model_file)
     except FileNotFoundError:
-        logger.error("Model file not found. Please train the model first and export it.")
+        logger.error("Model file not found. Please train the model first and save it to .model folder.")
         exit(1)
 
-def main(sofly_config: SoflyConfig, sofly_db_client: SoflyDbClient):
-
-    ai_model = load_ai('x_g_b_regressor.llm.pkl')
+def main(ai_model, sofly_config: SoflyConfig, sofly_db_client: SoflyDbClient):
 
     jwt_service = JWTService(sofly_config.jwt_secret)
 
@@ -65,8 +63,17 @@ def main(sofly_config: SoflyConfig, sofly_db_client: SoflyDbClient):
 
 
 if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        logger.critical("No argument provided for AI model, exiting...")
+        exit(1)
+    arg = sys.argv[1]
+    logger.info(f"Argument received: {arg}")
+
+    loaded_model = load_ai(f'./models/{arg}.llm.pkl')
+
     s_config, s_db_client = init_db()
     if s_config is None or s_db_client is None:
         logger.critical("Failed to initialize database client, exiting...")
         exit(1)
-    main(s_config, s_db_client)
+
+    main(loaded_model, s_config, s_db_client)
