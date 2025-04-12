@@ -1,7 +1,5 @@
 import os
 
-from xgboost import XGBRegressor
-
 import src.sofly_endpoints as sofly_endpoints
 
 from flask import Flask
@@ -46,7 +44,7 @@ class SoflyServer:
                     host: str,
                     jwt_service: JWTService,
                     db_client: SoflyDbClient,
-                    ai_model: XGBRegressor,
+                    ai_model,
                     port: int = 5000,
                     static_folder_path: str = os.path.join(os.getcwd(), 'public'),
                     template_folder: str = os.path.join(os.getcwd(),'templates'),
@@ -133,7 +131,7 @@ class SoflyServerBuilder:
         self._jwt_service = jwt_service
         return self
 
-    def set_ai_model(self, ai_model: XGBRegressor):
+    def set_ai_model(self, ai_model):
         self.ai_model = ai_model
         return self
 
