@@ -27,6 +27,12 @@ tensorflow = "2.19.0"
 tensorflow-io-gcs-filesystem = "0.31.0"
 keras = "3.9.2"
 
+[tool.poetry.group.web.dependencies]
+flask = {extras = ["async"], version = "^3.1.0"}
+loguru = "^0.7.3"
+pyhocon = "^0.3.61"
+aiomysql = "^0.2.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
