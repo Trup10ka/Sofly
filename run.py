@@ -2,7 +2,6 @@ import datetime
 import pickle as pkl
 import sys
 from loguru import logger
-from xgboost import XGBRegressor
 
 from src.config import SoflyConfig
 from src.config.pyhocon_config_loader import PyhoconConfigLoader
@@ -29,7 +28,7 @@ def init_db() -> tuple[SoflyConfig | None, SoflyDbClient | None]:
 
     return config, db_client
 
-def load_ai(file_name: str) -> XGBRegressor:
+def load_ai(file_name: str):
     try:
         with open(f".models/{file_name}", "rb") as model_file:
             return pkl.load(model_file)
