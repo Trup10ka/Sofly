@@ -32,6 +32,7 @@ flask = {extras = ["async"], version = "^3.1.0"}
 loguru = "^0.7.3"
 pyhocon = "^0.3.61"
 aiomysql = "^0.2.0"
+dbutils = "^3.1.0"
 
 [build-system]
 requires = ["poetry-core"]
